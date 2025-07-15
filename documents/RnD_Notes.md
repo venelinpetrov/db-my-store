@@ -37,7 +37,7 @@ In this model a product is just a conceptual entity. It doesn't have `price` and
 - `product_id`: `PK`
 - `name`
 - `description`
-- `category`
+- `category_id`
 - `brand`
 - Additional to the mentioned fields in the requirements, let's add `created_at` and `updated_at` fields
 - Let's also add `is_archived` to hide deprecated products without deleting them
@@ -47,6 +47,11 @@ In this model a product is just a conceptual entity. It doesn't have `price` and
 - `category_id`: `PK`, `AI`
 - `name`: `UQ`
 - `parent_category_id`: `FK`
+
+### `product_to_categories` junktion table
+
+- `product_id`: `PK`, `FK`
+- `category_id`: `PK`, `FK`
 
 ### `product_images` table
 
