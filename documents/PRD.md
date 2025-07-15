@@ -1,4 +1,4 @@
-# Store databases
+# SQL Store Database Design Exercise
 
 These are the requirements from the "imaginary product team". The app will be built in compliance with these requirements.
 
