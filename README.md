@@ -1,4 +1,6 @@
-# Store databases exercise
+# Store databases
+
+A real world assignment in the e-commerce space. This repo holds all assets necessary to build the database
 
 ## Business requirements (v0)
 
@@ -8,10 +10,9 @@
 - Customers can log in and place orders online.
 
 ### 2. Products
-- The store sells various products, each with a name, description, category, price, SKU, and quantity in stock.
+- The store sells various products, each with a name, description, brand, tags, category, price, SKU, and quantity in stock.
 - Products belong to categories (e.g., Electronics, Clothing, Books).
 - Products can have multiple images.
-- Discounts and promotions may apply to certain products.
 
 ### 3. Orders
 - Customers can place orders that contain one or more products.
@@ -46,6 +47,7 @@
 - Customers can request returns for individual items in an order.
 - Returns can be *Approved*, *Rejected*, or *Completed*.
 - Return reason and return date must be tracked.
+- Discounts and promotions may apply to certain products.
 - Product Reviews and Ratings
 - Gift Cards or Coupons
 - Wishlist or Favorites
