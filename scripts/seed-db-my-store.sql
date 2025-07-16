@@ -2,129 +2,333 @@
 
 USE my_store;
 
--- Sample data for `customers`
-INSERT INTO customers (name, email, phone) VALUES
-('Alice Wonderland', 'alice.w@example.com', '123-456-7890'),
-('Bob The Builder', 'bob.b@example.com', '098-765-4321'),
-('Charlie Chaplin', 'charlie.c@example.com', '111-222-3333'),
-('Diana Prince', 'diana.p@example.com', '444-555-6666'),
-('Eve Harrington', 'eve.h@example.com', '777-888-9999');
+-- Disable foreign key checks for easier insertion
+SET foreign_key_checks = 0;
 
--- Sample data for `address_types`
+-- Clear existing data (optional - uncomment if you want to reset)
+-- TRUNCATE TABLE shipments;
+-- TRUNCATE TABLE order_items;
+-- TRUNCATE TABLE orders;
+-- TRUNCATE TABLE order_statuses;
+-- TRUNCATE TABLE variant_option_assignments;
+-- TRUNCATE TABLE variant_option_values;
+-- TRUNCATE TABLE variant_options;
+-- TRUNCATE TABLE product_variants;
+-- TRUNCATE TABLE product_to_categories;
+-- TRUNCATE TABLE products;
+-- TRUNCATE TABLE product_categories;
+-- TRUNCATE TABLE customer_addresses;
+-- TRUNCATE TABLE address_types;
+-- TRUNCATE TABLE customers;
+
+-- Seed address types
 INSERT INTO address_types (type_name) VALUES
-('Shipping'),
-('Billing'),
 ('Home'),
-('Work');
+('Work'),
+('Billing'),
+('Shipping');
 
--- Sample data for `customer_addresses`
+-- Seed customers
+INSERT INTO customers (name, email, phone) VALUES
+('John Smith', 'john.smith@email.com', '+1-555-0101'),
+('Sarah Johnson', 'sarah.johnson@email.com', '+1-555-0102'),
+('Michael Brown', 'michael.brown@email.com', '+1-555-0103'),
+('Emily Davis', 'emily.davis@email.com', '+1-555-0104'),
+('David Wilson', 'david.wilson@email.com', '+1-555-0105'),
+('Lisa Anderson', 'lisa.anderson@email.com', '+1-555-0106'),
+('James Taylor', 'james.taylor@email.com', '+1-555-0107'),
+('Jennifer Martinez', 'jennifer.martinez@email.com', '+1-555-0108'),
+('Robert Garcia', 'robert.garcia@email.com', '+1-555-0109'),
+('Maria Rodriguez', 'maria.rodriguez@email.com', '+1-555-0110');
+
+-- Seed customer addresses
 INSERT INTO customer_addresses (customer_id, country, state, city, street, floor, appartment_no, address_type_id, is_default) VALUES
-(1, 'USA', 'California', 'Los Angeles', '123 Hollywood Blvd', NULL, '10A', 1, 1),
-(1, 'USA', 'California', 'Los Angeles', '123 Hollywood Blvd', NULL, '10A', 2, 0),
-(2, 'Canada', 'Ontario', 'Toronto', '45 Yonge St', '5', '500', 1, 1),
-(3, 'UK', 'England', 'London', '10 Downing St', NULL, NULL, 1, 1),
-(4, 'Germany', 'Bavaria', 'Munich', '789 Oktoberfest Str', NULL, 'Unit 3', 1, 1),
-(5, 'France', 'Ile-de-France', 'Paris', '1 Rue de la Paix', '2', 'B', 2, 1);
+(1, 'USA', 'California', 'Los Angeles', '123 Main St', '2', '2A', 1, 1),
+(1, 'USA', 'California', 'Los Angeles', '456 Business Ave', NULL, 'Suite 100', 2, 0),
+(2, 'USA', 'New York', 'New York', '789 Broadway', '15', '15B', 1, 1),
+(3, 'USA', 'Texas', 'Austin', '321 Oak Street', NULL, NULL, 1, 1),
+(4, 'USA', 'Florida', 'Miami', '654 Beach Drive', '3', '3C', 1, 1),
+(5, 'USA', 'Washington', 'Seattle', '987 Pine Street', '1', '1A', 1, 1),
+(6, 'USA', 'Illinois', 'Chicago', '147 Lake Shore Dr', '22', '22D', 1, 1),
+(7, 'USA', 'Colorado', 'Denver', '258 Mountain View', NULL, NULL, 1, 1),
+(8, 'USA', 'Arizona', 'Phoenix', '369 Desert Road', '4', '4B', 1, 1),
+(9, 'USA', 'Oregon', 'Portland', '741 Forest Ave', '2', '2C', 1, 1),
+(10, 'USA', 'Nevada', 'Las Vegas', '852 Strip Blvd', '10', '10A', 1, 1);
 
--- Sample data for `product_categories`
+-- Seed product categories (hierarchical)
 INSERT INTO product_categories (name, parent_category_id) VALUES
 ('Electronics', NULL),
-('Books', NULL),
 ('Clothing', NULL),
-('Laptops', 1),
+('Books', NULL),
+('Home & Garden', NULL),
+('Sports & Outdoors', NULL),
 ('Smartphones', 1),
-('Fiction', 2),
-('Non-Fiction', 2),
-('Menswear', 3),
-('Womenswear', 3),
-('Accessories', 3);
+('Laptops', 1),
+('Headphones', 1),
+('Men''s Clothing', 2),
+('Women''s Clothing', 2),
+('Fiction', 3),
+('Non-Fiction', 3),
+('Furniture', 4),
+('Appliances', 4),
+('Fitness Equipment', 5),
+('Outdoor Gear', 5);
 
--- Sample data for `products`
+-- Seed products
 INSERT INTO products (name, description, price) VALUES
-('MacBook Air M2', 'Sleek and powerful laptop from Apple.', 1199.99),
-('iPhone 15 Pro', 'Latest smartphone with advanced camera.', 999.00),
-('The Great Gatsby', 'Classic American novel by F. Scott Fitzgerald.', 12.50),
-('Dune', 'Epic science fiction novel by Frank Herbert.', 15.75),
-('Mens T-Shirt', 'Comfortable cotton t-shirt for men.', 25.00),
-('Womens Jeans', 'Stylish denim jeans for women.', 55.99),
-('Wireless Headphones', 'Noise-cancelling headphones with long battery life.', 199.99);
+('iPhone 15 Pro', 'Latest Apple smartphone with A17 Pro chip', 999.99),
+('Samsung Galaxy S24', 'Premium Android smartphone with AI features', 899.99),
+('MacBook Pro 16"', 'Professional laptop with M3 chip', 2499.99),
+('Dell XPS 13', 'Compact laptop for productivity', 1299.99),
+('Sony WH-1000XM5', 'Noise-canceling wireless headphones', 399.99),
+('AirPods Pro', 'Apple wireless earbuds with ANC', 249.99),
+('Men''s Casual Shirt', 'Comfortable cotton shirt for everyday wear', 29.99),
+('Women''s Summer Dress', 'Flowy dress perfect for summer', 49.99),
+('Denim Jeans', 'Classic blue jeans for men and women', 59.99),
+('The Great Gatsby', 'Classic American novel by F. Scott Fitzgerald', 12.99),
+('Atomic Habits', 'Self-help book about building good habits', 16.99),
+('Sapiens', 'A brief history of humankind', 18.99),
+('Office Chair', 'Ergonomic chair for home office', 199.99),
+('Coffee Table', 'Modern wooden coffee table', 299.99),
+('Treadmill', 'Home fitness treadmill with digital display', 899.99),
+('Yoga Mat', 'High-quality exercise mat', 24.99),
+('Camping Tent', '4-person waterproof tent', 149.99),
+('Hiking Backpack', 'Durable backpack for outdoor adventures', 89.99);
 
--- Sample data for `product_to_categories`
+-- Seed product to categories relationships
 INSERT INTO product_to_categories (product_id, category_id) VALUES
-(1, 1), -- MacBook Air M2 -> Electronics
-(1, 4), -- MacBook Air M2 -> Laptops
-(2, 1), -- iPhone 15 Pro -> Electronics
-(2, 5), -- iPhone 15 Pro -> Smartphones
-(3, 2), -- The Great Gatsby -> Books
-(3, 6), -- The Great Gatsby -> Fiction
-(4, 2), -- Dune -> Books
-(4, 6), -- Dune -> Fiction
-(5, 3), -- Mens T-Shirt -> Clothing
-(5, 8), -- Mens T-Shirt -> Menswear
-(6, 3), -- Womens Jeans -> Clothing
-(6, 9), -- Womens Jeans -> Womenswear
-(7, 1), -- Wireless Headphones -> Electronics
-(7, 10); -- Wireless Headphones -> Accessories
+(1, 6), -- iPhone 15 Pro -> Smartphones
+(2, 6), -- Samsung Galaxy S24 -> Smartphones
+(3, 7), -- MacBook Pro -> Laptops
+(4, 7), -- Dell XPS 13 -> Laptops
+(5, 8), -- Sony headphones -> Headphones
+(6, 8), -- AirPods -> Headphones
+(7, 9), -- Men's shirt -> Men's Clothing
+(8, 10), -- Women's dress -> Women's Clothing
+(9, 9), -- Jeans -> Men's Clothing
+(9, 10), -- Jeans -> Women's Clothing (unisex)
+(10, 11), -- The Great Gatsby -> Fiction
+(11, 12), -- Atomic Habits -> Non-Fiction
+(12, 12), -- Sapiens -> Non-Fiction
+(13, 13), -- Office Chair -> Furniture
+(14, 13), -- Coffee Table -> Furniture
+(15, 15), -- Treadmill -> Fitness Equipment
+(16, 15), -- Yoga Mat -> Fitness Equipment
+(17, 16), -- Camping Tent -> Outdoor Gear
+(18, 16); -- Hiking Backpack -> Outdoor Gear
 
--- Sample data for `product_variants`
-INSERT INTO product_variants (product_id, sku, unit_price, quantity_in_stock) VALUES
-(1, 'MBA-M2-256GB', 1199.99, 50),
-(1, 'MBA-M2-512GB', 1399.99, 30),
-(2, 'IP15P-128GB-BL', 999.00, 100),
-(2, 'IP15P-256GB-WH', 1099.00, 75),
-(5, 'TSHIRT-M-BLK', 25.00, 200),
-(5, 'TSHIRT-L-WHT', 25.00, 150),
-(6, 'JEANS-S-BLUE', 55.99, 80),
-(6, 'JEANS-M-BLACK', 55.99, 60),
-(7, 'WH-ANC-BLK', 199.99, 120);
-
--- Sample data for `variant_options`
+-- Seed variant options
 INSERT INTO variant_options (name) VALUES
 ('Color'),
+('Size'),
 ('Storage'),
-('Size');
+('Material'),
+('Style');
 
--- Sample data for `variant_option_values`
+-- Seed variant option values
 INSERT INTO variant_option_values (option_id, value) VALUES
-(1, 'Space Gray'), -- Color
-(1, 'Silver'),     -- Color
-(1, 'Midnight'),   -- Color
-(1, 'Black'),      -- Color
-(1, 'White'),      -- Color
-(1, 'Blue'),       -- Color
-(2, '128GB'),      -- Storage
-(2, '256GB'),      -- Storage
-(2, '512GB'),      -- Storage
-(3, 'Small'),      -- Size
-(3, 'Medium'),     -- Size
-(3, 'Large'),      -- Size
-(3, 'X-Large');    -- Size
+-- Colors
+(1, 'Black'),
+(1, 'White'),
+(1, 'Blue'),
+(1, 'Red'),
+(1, 'Silver'),
+(1, 'Gold'),
+(1, 'Gray'),
+(1, 'Green'),
+-- Sizes
+(2, 'XS'),
+(2, 'S'),
+(2, 'M'),
+(2, 'L'),
+(2, 'XL'),
+(2, 'XXL'),
+(2, '32'),
+(2, '34'),
+(2, '36'),
+(2, '38'),
+-- Storage
+(3, '128GB'),
+(3, '256GB'),
+(3, '512GB'),
+(3, '1TB'),
+-- Materials
+(4, 'Cotton'),
+(4, 'Polyester'),
+(4, 'Leather'),
+(4, 'Wood'),
+(4, 'Metal'),
+-- Styles
+(5, 'Casual'),
+(5, 'Formal'),
+(5, 'Sport');
 
--- Sample data for `variant_option_assignments`
-INSERT INTO variant_option_assignments (variant_id, value_id) VALUES
--- MacBook Air M2 variants
-(1, 9), -- MBA-M2-256GB -> 256GB (Storage)
-(1, 1), -- MBA-M2-256GB -> Space Gray (Color)
-(2, 9), -- MBA-M2-512GB -> 512GB (Storage)
-(2, 2), -- MBA-M2-512GB -> Silver (Color)
-
+-- Seed product variants
+INSERT INTO product_variants (product_id, sku, unit_price, quantity_in_stock) VALUES
 -- iPhone 15 Pro variants
-(3, 7), -- IP15P-128GB-BL -> 128GB (Storage)
-(3, 4), -- IP15P-128GB-BL -> Black (Color)
-(4, 8), -- IP15P-256GB-WH -> 256GB (Storage)
-(4, 5), -- IP15P-256GB-WH -> White (Color)
+(1, 'IPH15P-128-BLK', 999.99, 50),
+(1, 'IPH15P-256-BLK', 1099.99, 30),
+(1, 'IPH15P-128-SLV', 999.99, 45),
+(1, 'IPH15P-256-SLV', 1099.99, 25),
+-- Samsung Galaxy S24 variants
+(2, 'SGS24-128-BLK', 899.99, 40),
+(2, 'SGS24-256-BLK', 999.99, 35),
+-- MacBook Pro variants
+(3, 'MBP16-512-SLV', 2499.99, 15),
+(3, 'MBP16-1TB-SLV', 2799.99, 10),
+-- Dell XPS 13 variants
+(4, 'XPS13-256-SLV', 1299.99, 25),
+(4, 'XPS13-512-SLV', 1499.99, 20),
+-- Headphones variants
+(5, 'WH1000XM5-BLK', 399.99, 60),
+(5, 'WH1000XM5-SLV', 399.99, 45),
+(6, 'AIRPODS-WHT', 249.99, 100),
+-- Clothing variants
+(7, 'MSHIRT-M-BLU', 29.99, 80),
+(7, 'MSHIRT-L-BLU', 29.99, 75),
+(7, 'MSHIRT-M-WHT', 29.99, 70),
+(8, 'WDRESS-S-RED', 49.99, 40),
+(8, 'WDRESS-M-RED', 49.99, 35),
+(8, 'WDRESS-L-RED', 49.99, 30),
+(9, 'JEANS-32-BLU', 59.99, 50),
+(9, 'JEANS-34-BLU', 59.99, 55),
+(9, 'JEANS-36-BLU', 59.99, 45),
+-- Books (single variants)
+(10, 'BOOK-GATSBY', 12.99, 200),
+(11, 'BOOK-ATOMIC', 16.99, 150),
+(12, 'BOOK-SAPIENS', 18.99, 120),
+-- Furniture variants
+(13, 'CHAIR-BLK-LEATH', 199.99, 30),
+(13, 'CHAIR-GRAY-LEATH', 199.99, 25),
+(14, 'CTABLE-WOOD', 299.99, 15),
+-- Fitness equipment
+(15, 'TREADMILL-STD', 899.99, 10),
+(16, 'YOGA-MAT-BLU', 24.99, 100),
+(16, 'YOGA-MAT-GRN', 24.99, 80),
+-- Outdoor gear
+(17, 'TENT-4P-GRN', 149.99, 25),
+(18, 'BACKPACK-GRN', 89.99, 40),
+(18, 'BACKPACK-BLK', 89.99, 35);
 
--- Mens T-Shirt variants
-(5, 11), -- TSHIRT-M-BLK -> Medium (Size)
-(5, 4),  -- TSHIRT-M-BLK -> Black (Color)
-(6, 12), -- TSHIRT-L-WHT -> Large (Size)
-(6, 5),  -- TSHIRT-L-WHT -> White (Color)
+-- Seed variant option assignments
+INSERT INTO variant_option_assignments (variant_id, value_id) VALUES
+-- iPhone 15 Pro variants
+(1, 1), (1, 21), -- Black, 128GB
+(2, 1), (2, 22), -- Black, 256GB
+(3, 5), (3, 21), -- Silver, 128GB
+(4, 5), (4, 22), -- Silver, 256GB
+-- Samsung Galaxy S24 variants
+(5, 1), (5, 21), -- Black, 128GB
+(6, 1), (6, 22), -- Black, 256GB
+-- MacBook Pro variants
+(7, 5), (7, 23), -- Silver, 512GB
+(8, 5), (8, 24), -- Silver, 1TB
+-- Dell XPS 13 variants
+(9, 5), (9, 22), -- Silver, 256GB
+(10, 5), (10, 23), -- Silver, 512GB
+-- Headphones variants
+(11, 1), -- Black
+(12, 5), -- Silver
+(13, 2), -- White
+-- Clothing variants
+(14, 3), (14, 12), -- Blue, M
+(15, 3), (15, 13), -- Blue, L
+(16, 2), (16, 12), -- White, M
+(17, 4), (17, 10), -- Red, S
+(18, 4), (18, 12), -- Red, M
+(19, 4), (19, 13), -- Red, L
+(20, 3), (20, 16), -- Blue, 32
+(21, 3), (21, 17), -- Blue, 34
+(22, 3), (22, 18), -- Blue, 36
+-- Furniture variants
+(23, 1), (23, 27), -- Black, Leather
+(24, 7), (24, 27), -- Gray, Leather
+(25, 28), -- Wood
+-- Fitness equipment
+(26, 1), -- Black (Treadmill)
+(27, 3), -- Blue (Yoga Mat)
+(28, 8), -- Green (Yoga Mat)
+-- Outdoor gear
+(29, 8), -- Green (Tent)
+(30, 8), -- Green (Backpack)
+(31, 1); -- Black (Backpack)
 
--- Womens Jeans variants
-(7, 10), -- JEANS-S-BLUE -> Small (Size)
-(7, 6),  -- JEANS-S-BLUE -> Blue (Color)
-(8, 11), -- JEANS-M-BLACK -> Medium (Size)
-(8, 4),  -- JEANS-M-BLACK -> Black (Color)
+-- Seed order statuses
+INSERT INTO order_statuses (name) VALUES
+('Pending'),
+('Processing'),
+('Shipped'),
+('Delivered'),
+('Cancelled');
 
--- Wireless Headphones variant
-(9, 4);  -- WH-ANC-BLK -> Black (Color)
+-- Seed orders
+INSERT INTO orders (status_id, customer_id, address_id) VALUES
+(4, 1, 1), -- Delivered order for John Smith
+(3, 2, 3), -- Shipped order for Sarah Johnson
+(2, 3, 4), -- Processing order for Michael Brown
+(1, 4, 5), -- Pending order for Emily Davis
+(4, 5, 6), -- Delivered order for David Wilson
+(3, 6, 7), -- Shipped order for Lisa Anderson
+(2, 7, 8), -- Processing order for James Taylor
+(1, 8, 9), -- Pending order for Jennifer Martinez
+(4, 9, 10), -- Delivered order for Robert Garcia
+(2, 10, 11); -- Processing order for Maria Rodriguez
+
+-- Seed order items
+INSERT INTO order_items (order_id, variant_id, quantity, unit_price) VALUES
+-- Order 1 (John Smith)
+(1, 1, 1, 999.99), -- iPhone 15 Pro 128GB Black
+(1, 13, 1, 249.99), -- AirPods Pro White
+-- Order 2 (Sarah Johnson)
+(2, 3, 1, 2499.99), -- MacBook Pro 16" 512GB Silver
+(2, 11, 1, 399.99), -- Sony headphones Black
+-- Order 3 (Michael Brown)
+(3, 14, 2, 29.99), -- Men's shirt Blue M (quantity 2)
+(3, 20, 1, 59.99), -- Jeans 32 Blue
+-- Order 4 (Emily Davis)
+(4, 17, 1, 49.99), -- Women's dress Red S
+(4, 27, 1, 24.99), -- Yoga mat Blue
+-- Order 5 (David Wilson)
+(5, 5, 1, 899.99), -- Samsung Galaxy S24 128GB Black
+(5, 21, 12, 12.99), -- The Great Gatsby (quantity 12)
+-- Order 6 (Lisa Anderson)
+(6, 23, 1, 199.99), -- Office chair Black Leather
+(6, 25, 1, 299.99), -- Coffee table Wood
+-- Order 7 (James Taylor)
+(7, 26, 1, 899.99), -- Treadmill
+(7, 28, 2, 24.99), -- Yoga mat Green (quantity 2)
+-- Order 8 (Jennifer Martinez)
+(8, 29, 1, 149.99), -- Camping tent Green
+(8, 30, 1, 89.99), -- Hiking backpack Green
+-- Order 9 (Robert Garcia)
+(9, 9, 1, 1299.99), -- Dell XPS 13 256GB Silver
+(9, 22, 8, 16.99), -- Atomic Habits (quantity 8)
+-- Order 10 (Maria Rodriguez)
+(10, 18, 1, 49.99), -- Women's dress Red M
+(10, 19, 1, 49.99); -- Women's dress Red L
+
+-- Seed shipments (only for shipped and delivered orders)
+INSERT INTO shipments (carrier, tracking_number, shipment_date, delivery_date, order_id, address_id) VALUES
+('UPS', 'UPS123456789', '2024-01-15 09:30:00', '2024-01-18 14:20:00', 1, 1),
+('FedEx', 'FDX987654321', '2024-01-20 11:45:00', '2024-01-22 16:30:00', 2, 3),
+('DHL', 'DHL555666777', '2024-01-25 08:15:00', '2024-01-28 13:45:00', 5, 6),
+('USPS', 'USPS111222333', '2024-01-30 10:00:00', '2024-02-02 15:10:00', 6, 7),
+('UPS', 'UPS444555666', '2024-02-05 12:30:00', '2024-02-08 11:20:00', 9, 10);
+
+-- Re-enable foreign key checks
+SET foreign_key_checks = 1;
+
+-- Display summary of inserted data
+SELECT 'Data insertion completed successfully!' as Status;
+SELECT
+    'Customers' as Table_Name, COUNT(*) as Record_Count FROM customers
+UNION ALL
+SELECT 'Products', COUNT(*) FROM products
+UNION ALL
+SELECT 'Product Variants', COUNT(*) FROM product_variants
+UNION ALL
+SELECT 'Orders', COUNT(*) FROM orders
+UNION ALL
+SELECT 'Order Items', COUNT(*) FROM order_items
+UNION ALL
+SELECT 'Shipments', COUNT(*) FROM shipments;
