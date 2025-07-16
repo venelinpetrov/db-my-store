@@ -87,3 +87,54 @@ Each row is a unique combination of options for a product. For example T-shirt, 
 - `variant_id`: `PK`
 - `value_id`: `FK`
 
+
+## Orders
+
+I started thinking of shippments early on and came to the conclusion that logistics fulfillment is an entirely separate concept, therefore it should be kept separate from the orders model. Here is the reason why:
+
+**Lifecycle**: Shipping might be booked after an order is created, sometimes after payment.
+
+**Multiple attempts**: A shipment might be re-sent, re-routed, or split.
+
+**Carrier-specific info**: tracking numer, carrier, est. delivery date, don't belong in orders
+
+**Different responsibilities**: order = commerce, shipping = logistics.
+
+With that being said, ordering and shipping are still related, and I'll model this relation in this section.
+
+Q: Where does the `shipping_cost` go?
+A: The delivery (shipping) price is a cost tied to the order total, but it originates from the shipping method or provider
+
+Here is my consideration: The most straighrforwad and practical option is to keep it in the order. Let's assume we know the cost at the time of checkout, even if the shippment hasn't occurred yet. This will simplify accounting, because it keeps orders self-contained for invoices, total and reporting.
+
+### `orders` table
+
+- `order_id`: `PK`
+- `order_date`
+- `created_at`
+- `updated_at`
+- `status_id`: `FK`
+- `customer_id`: `FK`
+- `address_id`: `FK` - this is the shipping address
+
+### `order_items` table
+
+- `order_id`: `PK` `FK`
+- `variant_id`: `PK` `FK` - note: very important! I got confused and put product_id at first, but remember, the physical thing we are seeling is a specific "variant". Product is just a conceptual model
+- `quantity`
+- `unit_price`
+
+### `order_statuses` table
+
+- `status_id`: `PK`
+- `name`: `UQ` - *Pending*, *Shipped*, *Delivered*, *Cancelled*, *Returned*
+
+### `shipments` table
+
+- `shipment_id`: `PK`
+- `carrier`
+- `tracking_number`: `UQ`
+- `shipped_date`
+- `delivery_date`
+- `order_id`: `FK`
+- `address_id`: `FK`

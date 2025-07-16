@@ -23,7 +23,6 @@ These are the requirements from the "imaginary product team". The app will be bu
 ### 4. Payments
 - Customers can pay using credit cards, PayPal, or store credit.
 - Payments are tied to orders and include amount, date, and payment status (*Paid*, *Pending*, *Failed*).
-- Partial payments are allowed (optional complexity).
 
 ### 5. Invoices
 - Each order generates an invoice that includes taxes, discounts, and total amount due.
@@ -53,3 +52,4 @@ These are the requirements from the "imaginary product team". The app will be bu
 - Wishlist or Favorites
 - Loyalty Points
 - Multi-store setup (stores in different locations)
+- Partial payments are allowed

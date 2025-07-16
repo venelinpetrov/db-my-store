@@ -5,6 +5,8 @@ CREATE DATABASE my_store
 
 USE my_store;
 
+-- Customers model
+
 CREATE TABLE customers (
     customer_id INT NOT NULL AUTO_INCREMENT,
     name VARCHAR(100) NOT NULL,
@@ -40,6 +42,8 @@ CREATE TABLE customer_addresses (
     CONSTRAINT fk_customer_addresses_address_types FOREIGN KEY (address_type_id) REFERENCES address_types (address_type_id),
     CONSTRAINT fk_customers_customer_addresses FOREIGN KEY (customer_id) REFERENCES customers (customer_id) ON DELETE CASCADE ON UPDATE RESTRICT
 ) ENGINE=InnoDB;
+
+-- Products model
 
 CREATE TABLE product_categories (
     category_id INT NOT NULL AUTO_INCREMENT,
@@ -78,7 +82,7 @@ CREATE TABLE product_variants (
     sku VARCHAR(20) NOT NULL,
     unit_price DECIMAL(10, 2) NOT NULL,
     quantity_in_stock INT NOT NULL,
-    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (variant_id),
     UNIQUE KEY idx_product_variants_sku_UNIQUE (sku),
@@ -107,4 +111,52 @@ CREATE TABLE variant_option_assignments (
     PRIMARY KEY (variant_id, value_id),
     KEY fk_idx_variant_option_assignments_variant_id (variant_id),
     KEY fk_idx_variant_option_assignments_value_id (value_id)
+) ENGINE=InnoDB;
+
+-- Orders and Shipment models
+
+-- Order Statuses
+CREATE TABLE order_statuses (
+  status_id INT NOT NULL AUTO_INCREMENT,
+  name VARCHAR(20) NOT NULL UNIQUE,
+  PRIMARY KEY (status_id)
+) ENGINE=InnoDB;
+
+-- Orders
+CREATE TABLE orders (
+  order_id INT NOT NULL AUTO_INCREMENT,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  status_id INT NOT NULL,
+  customer_id INT NOT NULL,
+  address_id INT NOT NULL,
+  PRIMARY KEY (order_id),
+  FOREIGN KEY (status_id) REFERENCES order_statuses (status_id),
+  FOREIGN KEY (customer_id) REFERENCES customers (customer_id),
+  FOREIGN KEY (address_id) REFERENCES customer_addresses (address_id)
+) ENGINE=InnoDB;
+
+-- Order Items
+CREATE TABLE order_items (
+  order_id INT NOT NULL,
+  variant_id INT NOT NULL,
+  quantity INT NOT NULL,
+  unit_price DECIMAL(10, 2) NOT NULL,
+  PRIMARY KEY (order_id, variant_id),
+  FOREIGN KEY (order_id) REFERENCES orders (order_id),
+  FOREIGN KEY (variant_id) REFERENCES product_variants (variant_id)
+) ENGINE=InnoDB;
+
+-- Shipments
+CREATE TABLE shipments (
+  shipment_id INT NOT NULL AUTO_INCREMENT,
+  carrier VARCHAR(50) NOT NULL,
+  tracking_number VARCHAR(50) NOT NULL UNIQUE,
+  shipment_date DATETIME NOT NULL,
+  delivery_date DATETIME NOT NULL,
+  order_id INT NOT NULL,
+  address_id INT NOT NULL,
+  PRIMARY KEY (shipment_id),
+  FOREIGN KEY (order_id) REFERENCES orders (order_id),
+  FOREIGN KEY (address_id) REFERENCES customer_addresses (address_id)
 ) ENGINE=InnoDB;
