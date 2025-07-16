@@ -33,7 +33,7 @@ CREATE TABLE customer_addresses (
     floor VARCHAR(10) DEFAULT NULL,
     appartment_no VARCHAR(10) DEFAULT NULL,
     address_type_id INT NOT NULL,
-    is_default TINYINT(1) DEFAULT 0,
+    is_default TINYINT DEFAULT 0,
     PRIMARY KEY (address_id),
     KEY fk_idx_customer_addresses_customer_id (customer_id),
     KEY fk_idx_customer_addresses_address_type_id (address_type_id),
@@ -75,7 +75,7 @@ CREATE TABLE product_to_categories (
 CREATE TABLE product_variants (
     variant_id INT NOT NULL AUTO_INCREMENT,
     product_id INT NOT NULL,
-    sku VARCHAR(20) NOT NULL UNIQUE,
+    sku VARCHAR(20) NOT NULL,
     unit_price DECIMAL(10, 2) NOT NULL,
     quantity_in_stock INT NOT NULL,
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -87,7 +87,7 @@ CREATE TABLE product_variants (
 
 CREATE TABLE variant_options (
     option_id INT NOT NULL AUTO_INCREMENT,
-    name VARCHAR(50) NOT NULL UNIQUE,
+    name VARCHAR(50) NOT NULL,
     PRIMARY KEY (option_id),
     UNIQUE KEY idx_variant_options_name_UNIQUE (name)
 ) ENGINE=InnoDB;
