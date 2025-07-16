@@ -75,25 +75,25 @@ INSERT INTO product_categories (name, parent_category_id) VALUES
 ('Outdoor Gear', 5);
 
 -- Seed products
-INSERT INTO products (name, description, price) VALUES
-('iPhone 15 Pro', 'Latest Apple smartphone with A17 Pro chip', 999.99),
-('Samsung Galaxy S24', 'Premium Android smartphone with AI features', 899.99),
-('MacBook Pro 16"', 'Professional laptop with M3 chip', 2499.99),
-('Dell XPS 13', 'Compact laptop for productivity', 1299.99),
-('Sony WH-1000XM5', 'Noise-canceling wireless headphones', 399.99),
-('AirPods Pro', 'Apple wireless earbuds with ANC', 249.99),
-('Men''s Casual Shirt', 'Comfortable cotton shirt for everyday wear', 29.99),
-('Women''s Summer Dress', 'Flowy dress perfect for summer', 49.99),
-('Denim Jeans', 'Classic blue jeans for men and women', 59.99),
-('The Great Gatsby', 'Classic American novel by F. Scott Fitzgerald', 12.99),
-('Atomic Habits', 'Self-help book about building good habits', 16.99),
-('Sapiens', 'A brief history of humankind', 18.99),
-('Office Chair', 'Ergonomic chair for home office', 199.99),
-('Coffee Table', 'Modern wooden coffee table', 299.99),
-('Treadmill', 'Home fitness treadmill with digital display', 899.99),
-('Yoga Mat', 'High-quality exercise mat', 24.99),
-('Camping Tent', '4-person waterproof tent', 149.99),
-('Hiking Backpack', 'Durable backpack for outdoor adventures', 89.99);
+INSERT INTO products (name, description) VALUES
+('iPhone 15 Pro', 'Latest Apple smartphone with A17 Pro chip'),
+('Samsung Galaxy S24', 'Premium Android smartphone with AI features'),
+('MacBook Pro 16"', 'Professional laptop with M3 chip'),
+('Dell XPS 13', 'Compact laptop for productivity'),
+('Sony WH-1000XM5', 'Noise-canceling wireless headphones'),
+('AirPods Pro', 'Apple wireless earbuds with ANC'),
+('Men''s Casual Shirt', 'Comfortable cotton shirt for everyday wear'),
+('Women''s Summer Dress', 'Flowy dress perfect for summer'),
+('Denim Jeans', 'Classic blue jeans for men and women'),
+('The Great Gatsby', 'Classic American novel by F. Scott Fitzgerald'),
+('Atomic Habits', 'Self-help book about building good habits'),
+('Sapiens', 'A brief history of humankind'),
+('Office Chair', 'Ergonomic chair for home office'),
+('Coffee Table', 'Modern wooden coffee table'),
+('Treadmill', 'Home fitness treadmill with digital display'),
+('Yoga Mat', 'High-quality exercise mat'),
+('Camping Tent', '4-person waterproof tent'),
+('Hiking Backpack', 'Durable backpack for outdoor adventures');
 
 -- Seed product to categories relationships
 INSERT INTO product_to_categories (product_id, category_id) VALUES
