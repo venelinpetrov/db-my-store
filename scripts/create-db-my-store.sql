@@ -79,7 +79,7 @@ CREATE TABLE product_variants (
     unit_price DECIMAL(10, 2) NOT NULL,
     quantity_in_stock INT NOT NULL,
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (variant_id),
     UNIQUE KEY idx_product_variants_sku_UNIQUE (sku),
     KEY fk_idx_product_variants_product_id (product_id)
