@@ -85,7 +85,8 @@ CREATE TABLE product_variants (
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (variant_id),
     UNIQUE KEY idx_product_variants_sku_UNIQUE (sku),
-    KEY fk_idx_product_variants_product_id (product_id)
+    KEY fk_idx_product_variants_product_id (product_id),
+    CONSTRAINT fk_product_variants_products FOREIGN KEY (product_id) REFERENCES products (product_id) ON DELETE CASCADE ON UPDATE RESTRICT
 ) ENGINE=InnoDB;
 
 CREATE TABLE variant_options (
@@ -101,7 +102,8 @@ CREATE TABLE variant_option_values (
     value VARCHAR(50) NOT NULL,
     PRIMARY KEY (value_id),
     KEY fk_idx_variant_option_values_option_id (option_id),
-    UNIQUE KEY idx_variant_option_values_option_value_UNIQUE (option_id, value)
+    UNIQUE KEY idx_variant_option_values_option_value_UNIQUE (option_id, value),
+    CONSTRAINT fk_variant_option_values_variant_options FOREIGN KEY (option_id) REFERENCES variant_options (option_id) ON DELETE CASCADE ON UPDATE RESTRICT
 ) ENGINE=InnoDB;
 
 CREATE TABLE variant_option_assignments (
