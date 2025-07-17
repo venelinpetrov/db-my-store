@@ -76,6 +76,23 @@ CREATE TABLE products (
     CONSTRAINT fk_products_brands FOREIGN KEY (brand_id) REFERENCES brands (brand_id) ON DELETE SET NULL
 ) ENGINE=InnoDB;
 
+CREATE TABLE tags (
+    tag_id INT NOT NULL AUTO_INCREMENT,
+    name VARCHAR(50) NOT NULL,
+    PRIMARY KEY (tag_id),
+    UNIQUE KEY idx_tags_name_UNIQUE (name)
+) ENGINE=InnoDB;
+
+CREATE TABLE product_tags (
+    product_id INT NOT NULL,
+    tag_id INT NOT NULL,
+    PRIMARY KEY (product_id, tag_id),
+    KEY fk_idx_product_tags_product_id (product_id),
+    KEY fk_idx_product_tags_tag_id (tag_id),
+    CONSTRAINT fk_product_tags_product FOREIGN KEY (product_id) REFERENCES products (product_id) ON DELETE CASCADE,
+    CONSTRAINT fk_product_tags_tag FOREIGN KEY (tag_id) REFERENCES tags (tag_id) ON DELETE CASCADE
+) ENGINE=InnoDB;
+
 CREATE TABLE product_to_categories (
     product_id INT NOT NULL,
     category_id INT NOT NULL,
