@@ -127,6 +127,7 @@ Here is my consideration: The most straighrforwad and practical option is to kee
 
 - `order_id`: `PK`
 - `order_date`
+- `shipping_cost`
 - `created_at`
 - `updated_at`
 - `status_id`: `FK`
@@ -154,3 +155,81 @@ Here is my consideration: The most straighrforwad and practical option is to kee
 - `delivery_date`
 - `order_id`: `FK`
 - `address_id`: `FK`
+
+
+## Payments
+
+I think of invoices and payments together, because what the customer pays is the invoice total
+
+Q: How do we insert and update invoices/payments
+
+A: The application layer will be responsible for this, as this is more transparent and controllable.
+
+Q: How is the `invoice_total` calculated
+
+A: We sum all the items multiplied by their quantitites in the order, add taxes and shipping costs and subtract disocunt. Note that discounts are not modeled here yet.
+
+```
+total = sum(item_price * item_quantity) + tax + shipping_cost - discount
+```
+
+Another matter to consider is the "invoice status". Is it entirely determined by the payment status, or we should allow for "manual" adjustment?
+
+Option 1 is no status on invoices
+
+Pros:
+
+- Always reflects live data.
+- Eliminates the need for syncing/inconsistencies.
+
+Cons:
+
+- Requires calculating state dynamically in queries.
+- More complex reporting (but solvable via views or computed columns).
+
+Option 2 is `status_id` on invoices
+
+Pros:
+
+- Faster reads, especially in dashboards or reporting.
+- Easier to track business-specific states (beyond payments).
+
+Cons:
+
+- Risk of stale/inconsistent data unless kept in sync (via triggers or app logic).
+
+Let's go with option 1 for now, no status on ivoices.
+
+### `invoices` table
+
+- `invoice_id`: `PK`
+- `order_id`: `FK`
+- `customer_id`: `FK`
+- `invoice_total`
+- `tax`
+- `discount`
+- `payment_total`
+- `invoice_date`
+- `due_date`
+- `payment_date`
+
+
+### `payment_methods` table
+
+- `method_id`: `PK`
+- `type`
+- `name`: `UQ`
+
+### `payment_statuses` table
+
+- `status_id`: `PK`
+- `name`: `UQ`
+
+### `payments` table
+
+- `payment_id`: `PK`
+- `invoice_id`: `FK`
+- `amount`
+- `payment_date`
+- `payment_method_id`
+- `status_id`: `FK`

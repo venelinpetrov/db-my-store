@@ -147,52 +147,103 @@ CREATE TABLE variant_option_assignments (
 -- Orders and Shipment models
 
 CREATE TABLE order_statuses (
-  status_id INT NOT NULL AUTO_INCREMENT,
-  name VARCHAR(20) NOT NULL UNIQUE,
-  PRIMARY KEY (status_id)
+    status_id INT NOT NULL AUTO_INCREMENT,
+    name VARCHAR(20) NOT NULL UNIQUE,
+    PRIMARY KEY (status_id)
 ) ENGINE=InnoDB;
 
 CREATE TABLE orders (
-  order_id INT NOT NULL AUTO_INCREMENT,
-  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  status_id INT NOT NULL,
-  customer_id INT NOT NULL,
-  address_id INT NOT NULL,
-  PRIMARY KEY (order_id),
-  KEY fk_idx_orders_status_id (status_id),
-  KEY fk_idx_orders_customer_id (customer_id),
-  KEY fk_idx_orders_address_id (address_id),
-  KEY idx_orders_customer_status (customer_id, status_id),
-  FOREIGN KEY (status_id) REFERENCES order_statuses (status_id),
-  FOREIGN KEY (customer_id) REFERENCES customers (customer_id),
-  FOREIGN KEY (address_id) REFERENCES customer_addresses (address_id)
+    order_id INT NOT NULL AUTO_INCREMENT,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    status_id INT NOT NULL,
+    customer_id INT NOT NULL,
+    address_id INT NOT NULL,
+    PRIMARY KEY (order_id),
+    KEY fk_idx_orders_status_id (status_id),
+    KEY fk_idx_orders_customer_id (customer_id),
+    KEY fk_idx_orders_address_id (address_id),
+    KEY idx_orders_customer_status (customer_id, status_id),
+    FOREIGN KEY (status_id) REFERENCES order_statuses (status_id),
+    FOREIGN KEY (customer_id) REFERENCES customers (customer_id),
+    FOREIGN KEY (address_id) REFERENCES customer_addresses (address_id)
 ) ENGINE=InnoDB;
 
 CREATE TABLE order_items (
-  order_id INT NOT NULL,
-  variant_id INT NOT NULL,
-  quantity INT NOT NULL,
-  unit_price DECIMAL(10, 2) NOT NULL,
-  PRIMARY KEY (order_id, variant_id),
-  KEY fk_idx_order_items_order_id (order_id),
-  KEY fk_idx_order_items_variant_id (variant_id),
-  FOREIGN KEY (order_id) REFERENCES orders (order_id),
-  FOREIGN KEY (variant_id) REFERENCES product_variants (variant_id)
+    order_id INT NOT NULL,
+    variant_id INT NOT NULL,
+    quantity INT NOT NULL,
+    unit_price DECIMAL(10, 2) NOT NULL,
+    PRIMARY KEY (order_id, variant_id),
+    KEY fk_idx_order_items_order_id (order_id),
+    KEY fk_idx_order_items_variant_id (variant_id),
+    FOREIGN KEY (order_id) REFERENCES orders (order_id),
+    FOREIGN KEY (variant_id) REFERENCES product_variants (variant_id)
 ) ENGINE=InnoDB;
 
 
 CREATE TABLE shipments (
-  shipment_id INT NOT NULL AUTO_INCREMENT,
-  carrier VARCHAR(50) NOT NULL,
-  tracking_number VARCHAR(50) NOT NULL UNIQUE,
-  shipment_date DATETIME NOT NULL,
-  delivery_date DATETIME NOT NULL,
-  order_id INT NOT NULL,
-  address_id INT NOT NULL,
-  PRIMARY KEY (shipment_id),
-  KEY fk_idx_shipments_order_id (order_id),
-  KEY fk_idx_shipments_address_id (address_id),
-  FOREIGN KEY (order_id) REFERENCES orders (order_id),
-  FOREIGN KEY (address_id) REFERENCES customer_addresses (address_id)
+    shipment_id INT NOT NULL AUTO_INCREMENT,
+    carrier VARCHAR(50) NOT NULL,
+    tracking_number VARCHAR(50) NOT NULL UNIQUE,
+    shipment_date DATETIME NOT NULL,
+    delivery_date DATETIME NOT NULL,
+    order_id INT NOT NULL,
+    address_id INT NOT NULL,
+    PRIMARY KEY (shipment_id),
+    KEY fk_idx_shipments_order_id (order_id),
+    KEY fk_idx_shipments_address_id (address_id),
+    FOREIGN KEY (order_id) REFERENCES orders (order_id),
+    FOREIGN KEY (address_id) REFERENCES customer_addresses (address_id)
+) ENGINE=InnoDB;
+
+-- Invoices and Payments model
+
+CREATE TABLE invoices (
+    invoice_id INT NOT NULL AUTO_INCREMENT,
+    order_id INT NOT NULL,
+    customer_id INT NOT NULL,
+    invoice_total DECIMAL(10, 2) NOT NULL, -- subtotal + shipping
+    tax DECIMAL(10, 2) NOT NULL DEFAULT 0.00,
+    discount DECIMAL(10, 2) NOT NULL DEFAULT 0.00,
+    payment_total DECIMAL(10, 2) NOT NULL DEFAULT 0.00, -- amount paid
+    invoice_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    due_date DATETIME NOT NULL,
+    payment_date DATETIME DEFAULT NULL,
+    PRIMARY KEY (invoice_id),
+    KEY fk_idx_invoices_order_id (order_id),
+    KEY fk_idx_invoices_customer_id (customer_id),
+    FOREIGN KEY (order_id) REFERENCES orders(order_id),
+    FOREIGN KEY (customer_id) REFERENCES customers(customer_id)
+) ENGINE=InnoDB;
+
+CREATE TABLE payment_methods (
+    method_id INT NOT NULL AUTO_INCREMENT,
+    type ENUM('Credit Card', 'Bank Transfer', 'PayPal', 'Cash', 'Other') NOT NULL,
+    name VARCHAR(50) NOT NULL,
+    PRIMARY KEY (method_id),
+    UNIQUE KEY idx_payment_methods_name_UNIQUE (name)
+) ENGINE=InnoDB;
+
+CREATE TABLE payment_statuses (
+    status_id INT NOT NULL AUTO_INCREMENT,
+    name VARCHAR(20) NOT NULL,
+    PRIMARY KEY (status_id),
+    UNIQUE KEY idx_payment_statuses_name_UNIQUE (name)
+) ENGINE=InnoDB;
+
+CREATE TABLE payments (
+    payment_id INT NOT NULL AUTO_INCREMENT,
+    invoice_id INT NOT NULL,
+    amount DECIMAL(10, 2) NOT NULL,
+    payment_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    method_id INT,
+    status_id INT NOT NULL,
+    PRIMARY KEY (payment_id),
+    KEY fk_idx_payments_invoice_id (invoice_id),
+    KEY fk_idx_payments_method_id(method_id),
+    KEY fk_idx_payments_status_id (status_id),
+    FOREIGN KEY (invoice_id) REFERENCES invoices(invoice_id) ON DELETE CASCADE,
+    FOREIGN KEY (method_id) REFERENCES payment_methods(method_id) ON DELETE SET NULL,
+    FOREIGN KEY (status_id) REFERENCES payment_statuses(status_id)
 ) ENGINE=InnoDB;
