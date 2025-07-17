@@ -61,6 +61,12 @@ In this model a product is just a conceptual entity. It doesn't have `price` and
 - `alt_text` - note: this is not in the requirements, but I decided to add it, for accessibility reasons
 - `is_primary` - note: this is not in the requirements, but the FE will probably need it, if we want deterministic thumbnails
 
+### `brands` table
+
+- `brand_id`: `PK`
+- `name`
+- `logo_url`
+
 ### `product_variants` table
 
 Each row is a unique combination of options for a product. For example T-shirt, Red, M. However, it is not easy to enforce uniqueness in a normalized structure. There are few options though. Let's come back to this later and assume for now that, the uniqueness will be enforced by the app layer. We can then add another column that will hold a normalized string, composed of the ids of each variant table below. For example "1-1-2" and enforce unique constrain on this column.
