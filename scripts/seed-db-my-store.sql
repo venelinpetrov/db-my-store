@@ -17,13 +17,13 @@ INSERT INTO customers (name, email, phone, created_at) VALUES
 
 -- Insert data into customer_addresses
 INSERT INTO customer_addresses (customer_id, country, state, city, street, floor, appartment_no, address_type_id, is_default) VALUES
-(1, 'USA', 'California', 'Los Angeles', '123 Main St', NULL, '10A', 1, 1), -- Alice Shipping
-(1, 'USA', 'California', 'Los Angeles', '123 Main St', NULL, '10A', 2, 0), -- Alice Billing
-(2, 'Canada', 'Ontario', 'Toronto', '456 Oak Ave', '2', '201', 1, 1), -- Bob Shipping
-(2, 'Canada', 'Ontario', 'Toronto', '456 Oak Ave', '2', '201', 2, 0), -- Bob Billing
-(3, 'UK', 'England', 'London', '789 Elm Rd', NULL, NULL, 1, 1), -- Charlie Shipping
-(4, 'Germany', 'Bavaria', 'Munich', '101 Pine Ln', '3', '3B', 1, 1), -- Diana Shipping
-(5, 'France', 'Ile-de-France', 'Paris', '202 Birch Blvd', NULL, 'G05', 1, 1); -- Eve Shipping
+(1, 'USA', 'California', 'Los Angeles', '123 Main St', NULL, '10A', 1, 1),
+(1, 'USA', 'California', 'Los Angeles', '123 Main St', NULL, '10A', 2, 0),
+(2, 'Canada', 'Ontario', 'Toronto', '456 Oak Ave', '2', '201', 1, 1),
+(2, 'Canada', 'Ontario', 'Toronto', '456 Oak Ave', '2', '201', 2, 0),
+(3, 'UK', 'England', 'London', '789 Elm Rd', NULL, NULL, 1, 1),
+(4, 'Germany', 'Bavaria', 'Munich', '101 Pine Ln', '3', '3B', 1, 1),
+(5, 'France', 'Ile-de-France', 'Paris', '202 Birch Blvd', NULL, 'G05', 1, 1);
 
 -- Insert data into product_categories
 INSERT INTO product_categories (name, parent_category_id) VALUES

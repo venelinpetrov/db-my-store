@@ -233,3 +233,22 @@ Let's go with option 1 for now, no status on ivoices.
 - `payment_date`
 - `payment_method_id`
 - `status_id`: `FK`
+
+
+## Inventory management
+
+Q: Should this be a view or a table
+
+A: A table is more robust and future proof as it will support full audit trail and tracking all kinds of changes, e.g. "In"/"Out"/"Adjustment".
+
+View is good for real time tracking of stock levels.
+
+I'd consider both.
+
+Requirements are a bit vague. Should we support multiple warehouses locations? Should we support suppliers? Should we support restock date and track restocking as well?
+
+Let's model the simplest scenario where we just keep track of all quantities and update them when a change occurs.
+
+### `inventory` table
+
+TBD
