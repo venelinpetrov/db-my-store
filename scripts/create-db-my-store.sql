@@ -68,12 +68,16 @@ CREATE TABLE products (
     name VARCHAR(255) NOT NULL,
     description TEXT,
     brand_id INT DEFAULT NULL,
+    category_id INT DEFAULT NULL,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (product_id),
     KEY idx_products_name (name),
     KEY fk_idx_products_brand_id (brand_id),
-    CONSTRAINT fk_products_brands FOREIGN KEY (brand_id) REFERENCES brands (brand_id) ON DELETE SET NULL
+    CONSTRAINT fk_products_brands FOREIGN KEY (brand_id) REFERENCES brands (brand_id) ON DELETE SET NULL,
+    KEY fk_idx_products_category_id (category_id),
+    CONSTRAINT fk_products_categories FOREIGN KEY (category_id) REFERENCES product_categories (category_id) ON DELETE SET NULL
+
 ) ENGINE=InnoDB;
 
 CREATE TABLE tags (

@@ -254,6 +254,9 @@ class DatabaseSeeder:
         self.cursor.execute("SELECT brand_id FROM brands")
         brand_ids = [row[0] for row in self.cursor.fetchall()]
 
+        self.cursor.execute("SELECT category_id FROM product_categories")
+        category_ids = [row[0] for row in self.cursor.fetchall()]
+
         product_names = [
             'iPhone 15 Pro', 'MacBook Air M2', 'Samsung Galaxy S24', 'Dell XPS 13', 'Sony WH-1000XM5',
             'Nike Air Max 270', 'Adidas Ultraboost 22', 'IKEA Billy Bookshelf', 'H&M Cotton T-Shirt',
@@ -278,12 +281,13 @@ class DatabaseSeeder:
         for i in range(count):
             name = f"{random.choice(product_names)} - Model {random.randint(1000, 9999)}"
             description = random.choice(descriptions)
-            brand_id = random.choice(brand_ids + [None])  # Some products without brands
+            brand_id = random.choice(brand_ids)
+            category_id = random.choice(category_ids)
             created_at = self.generate_date_range(2022, 2024)
 
             self.cursor.execute(
-                "INSERT INTO products (name, description, brand_id, created_at) VALUES (%s, %s, %s, %s)",
-                (name, description, brand_id, created_at)
+                "INSERT INTO products (name, description, brand_id, category_id, created_at) VALUES (%s, %s, %s, %s, %s)",
+                (name, description, brand_id, category_id, created_at)
             )
 
         self.conn.commit()
