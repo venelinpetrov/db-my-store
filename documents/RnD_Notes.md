@@ -85,7 +85,7 @@ Each row is a unique combination of options for a product. For example T-shirt, 
 - `product_id`: `FK`
 - `sku`: `UQ`
 - `unit_price`
-- `quantity_in_stock`
+- ~~quantity_in_stock~~ - this will be moved to inventory
 
 ### `variant_options` table
 
@@ -249,6 +249,26 @@ Requirements are a bit vague. Should we support multiple warehouses locations? S
 
 Let's model the simplest scenario where we just keep track of all quantities and update them when a change occurs.
 
-### `inventory` table
+Another important change: `quantity_in_stock` should not be a field of `product_variants` anymore, to should be part of `inventory` instead. This will also allow to suport different quantities in different warehaouses (if needed) which in itself suggests that quantity is not really a property of a variant. This will also improve queries performance because we just need to perform a direct lookup by id which is straighforward.
 
-TBD
+Altohough to mentioned in the initial requirements, it is worth considering an `inventory_movements` table that will keep track of all changes. This will make it possible to track and debug all changes in the inventory. So let's do that as well.
+
+
+Add `trg_after_inventory_movement_insert` trigger to ensure inventory_levels are properly adjusted when there is a new entry in `inventory_movements`
+
+### `inventory_levels` table
+
+- `inventory_id`: `PK`
+- `variant_id`: `FK`
+- `quantity_in_stock`
+- `created_at`
+- `updated_at`
+
+### `inventory_movements` table
+
+- `movement_id`: `PK`
+- `variant_id`: `FK`
+- `movement_type` - for simplicity I'll make it enum, but this is not ideal as it is not normalized
+- `quantity`
+- `reason`
+- `created_at`

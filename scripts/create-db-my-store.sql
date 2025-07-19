@@ -247,3 +247,55 @@ CREATE TABLE payments (
     FOREIGN KEY (method_id) REFERENCES payment_methods(method_id) ON DELETE SET NULL,
     FOREIGN KEY (status_id) REFERENCES payment_statuses(status_id)
 ) ENGINE=InnoDB;
+
+CREATE TABLE inventory_levels (
+    inventory_id INT NOT NULL AUTO_INCREMENT,
+    variant_id INT NOT NULL,
+    quantity_in_stock INT NOT NULL DEFAULT 0,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (inventory_id),
+    UNIQUE KEY idx_inventory_variant_id_UNIQUE (variant_id),
+    KEY fk_idx_inventory_variant_id (variant_id),
+    CONSTRAINT fk_inventory_levels_variant FOREIGN KEY (variant_id)
+        REFERENCES product_variants (variant_id)
+        ON DELETE CASCADE ON UPDATE RESTRICT
+) ENGINE=InnoDB;
+
+CREATE TABLE inventory_movements (
+    movement_id INT NOT NULL AUTO_INCREMENT,
+    variant_id INT NOT NULL,
+    movement_type ENUM('IN', 'OUT', 'ADJUSTMENT') NOT NULL,
+    quantity INT NOT NULL,
+    reason VARCHAR(100),
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (movement_id),
+    KEY fk_idx_inventory_movements_variant_id (variant_id),
+    CONSTRAINT fk_inventory_movements_variants FOREIGN KEY (variant_id)
+        REFERENCES product_variants (variant_id)
+        ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+DELIMITER $$
+
+CREATE TRIGGER trg_after_inventory_movement_insert
+AFTER INSERT ON inventory_movements
+FOR EACH ROW
+BEGIN
+  DECLARE updated_quantity INT;
+
+  SET updated_quantity =
+    CASE
+      WHEN NEW.movement_type = 'IN' THEN NEW.quantity
+      WHEN NEW.movement_type = 'OUT' THEN -NEW.quantity
+      ELSE 0
+    END;
+
+  INSERT INTO inventory_levels (variant_id, quantity_in_stock)
+  VALUES (NEW.variant_id, updated_quantity)
+  ON DUPLICATE KEY UPDATE
+    quantity_in_stock = quantity_in_stock + updated_quantity,
+    updated_at = CURRENT_TIMESTAMP;
+END$$
+
+DELIMITER ;
