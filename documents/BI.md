@@ -15,7 +15,6 @@ Goal: Understand how much we're selling, and what is driving revenue.
 
 Goal: Learn who our customers are and how they behave. New vs returning customers
 
-- Customer Lifetime Value (CLV): Total revenue per customer
 - Most active customers (by number of orders or spend)
 - Churn rate: Customers with no purchase in X days
 - Customer distribution by region

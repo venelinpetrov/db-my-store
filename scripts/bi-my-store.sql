@@ -54,13 +54,13 @@ SELECT
     SUM(quantity * pv.unit_price) AS total
 FROM my_store.order_items oi
 LEFT JOIN product_variants pv
-	USING (variant_id)
+    USING (variant_id)
 JOIN products p
-	USING (product_id)
+    USING (product_id)
 JOIN variant_option_assignments voa
-	USING (variant_id)
+    USING (variant_id)
 LEFT JOIN brands b
-	USING (brand_id)
+    USING (brand_id)
 GROUP BY pv.variant_id, pv.sku
 ORDER BY pv.variant_id;
 
@@ -74,11 +74,11 @@ SELECT
     SUM(pv.unit_price) AS revenue
 FROM order_items oi
 LEFT JOIN product_variants pv
-	USING (variant_id)
+    USING (variant_id)
 LEFT JOIN products p
-	USING (product_id)
+    USING (product_id)
 LEFT JOIN product_categories pc
-	USING (category_id)
+    USING (category_id)
 GROUP BY category_id;
 
 -- Revenue per brand
@@ -86,15 +86,15 @@ GROUP BY category_id;
 DROP VIEW IF EXISTS view_revenue_per_brand;
 CREATE VIEW view_revenue_per_brand AS
 SELECT
-	b.name AS brand,
+    b.name AS brand,
     SUM(pv.unit_price) AS revenue
 FROM order_items oi
 LEFT JOIN product_variants pv
-	USING (variant_id)
+    USING (variant_id)
 LEFT JOIN products p
-	USING (product_id)
+    USING (product_id)
 LEFT JOIN brands b
-	USING (brand_id)
+    USING (brand_id)
 GROUP BY brand
 ORDER BY revenue DESC;
 
@@ -104,14 +104,14 @@ ORDER BY revenue DESC;
 DROP VIEW IF EXISTS view_top_selling_products;
 CREATE VIEW view_top_selling_products AS
 SELECT
-	p.name,
+    p.name,
     SUM(oi.quantity) AS quantity,
     SUM(oi.quantity * oi.unit_price) AS revenue
 FROM order_items oi
 JOIN product_variants pv
-	USING (variant_id)
+    USING (variant_id)
 JOIN products p
-	USING (product_id)
+    USING (product_id)
 GROUP BY product_id;
 
 -- Sales by region
@@ -120,11 +120,11 @@ GROUP BY product_id;
 DROP VIEW IF EXISTS view_sales_by_country;
 CREATE VIEW view_sales_by_country AS
 SELECT
-	ca.country,
-	SUM(i.payment_total) AS revenue
+    ca.country,
+    SUM(i.payment_total) AS revenue
 FROM invoices i
 JOIN customer_addresses ca
-	USING(customer_id)
+    USING(customer_id)
 WHERE i.payment_date IS NOT NULL
 GROUP BY ca.country
 ORDER BY revenue DESC;
@@ -133,11 +133,41 @@ ORDER BY revenue DESC;
 DROP VIEW IF EXISTS view_sales_by_city;
 CREATE VIEW view_sales_by_city AS
 SELECT
-	ca.city,
-	SUM(i.payment_total) AS revenue
+    ca.city,
+    SUM(i.payment_total) AS revenue
 FROM invoices i
 JOIN customer_addresses ca
-	USING(customer_id)
+    USING(customer_id)
 WHERE i.payment_date IS NOT NULL
 GROUP BY ca.city
 ORDER BY revenue DESC;
+
+-- Most active customers
+
+-- by number of orders
+DROP VIEW IF EXISTS view_most_active_customers_by_number_of_orders;
+CREATE VIEW view_most_active_customers_by_number_of_orders AS
+SELECT
+    c.name,
+    COUNT(i.invoice_id) AS number_of_orders
+FROM invoices i
+JOIN customers c
+    USING (customer_id)
+GROUP BY i.customer_id
+ORDER BY number_of_orders DESC
+LIMIT 20;
+
+-- by total spent
+DROP VIEW IF EXISTS view_most_active_customers_by_spend;
+CREATE VIEW view_most_active_customers_by_spend AS
+SELECT
+    c.customer_id,
+    c.name,
+    SUM(i.payment_total) AS total_spent
+FROM invoices i
+JOIN customers c
+    USING (customer_id)
+WHERE i.payment_date IS NOT NULL
+GROUP BY i.customer_id
+ORDER BY total_spent DESC
+LIMIT 20;
