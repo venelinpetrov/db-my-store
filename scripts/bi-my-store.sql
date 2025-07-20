@@ -40,6 +40,7 @@ GROUP BY month
 ORDER BY month;
 
 -- Revenue per product
+
 DROP VIEW IF EXISTS view_revenue_per_product;
 CREATE VIEW view_revenue_per_product AS
 SELECT
@@ -64,12 +65,13 @@ GROUP BY pv.variant_id, pv.sku
 ORDER BY pv.variant_id;
 
 -- Revenue per category
+
 DROP VIEW IF EXISTS view_revenue_per_category;
 CREATE VIEW view_revenue_per_category AS
 SELECT
     pc.category_id,
     pc.name AS category_name,
-    SUM(pv.unit_price)
+    SUM(pv.unit_price) AS revenue
 FROM order_items oi
 LEFT JOIN product_variants pv
 	USING (variant_id)
@@ -79,6 +81,63 @@ LEFT JOIN product_categories pc
 	USING (category_id)
 GROUP BY category_id;
 
--- TODO: fix category in schema
-
 -- Revenue per brand
+
+DROP VIEW IF EXISTS view_revenue_per_brand;
+CREATE VIEW view_revenue_per_brand AS
+SELECT
+	b.name AS brand,
+    SUM(pv.unit_price) AS revenue
+FROM order_items oi
+LEFT JOIN product_variants pv
+	USING (variant_id)
+LEFT JOIN products p
+	USING (product_id)
+LEFT JOIN brands b
+	USING (brand_id)
+GROUP BY brand
+ORDER BY revenue DESC;
+
+-- Top-selling products by quantity and revenue
+
+
+DROP VIEW IF EXISTS view_top_selling_products;
+CREATE VIEW view_top_selling_products AS
+SELECT
+	p.name,
+    SUM(oi.quantity) AS quantity,
+    SUM(oi.quantity * oi.unit_price) AS revenue
+FROM order_items oi
+JOIN product_variants pv
+	USING (variant_id)
+JOIN products p
+	USING (product_id)
+GROUP BY product_id;
+
+-- Sales by region
+
+-- Country
+DROP VIEW IF EXISTS view_sales_by_country;
+CREATE VIEW view_sales_by_country AS
+SELECT
+	ca.country,
+	SUM(i.payment_total) AS revenue
+FROM invoices i
+JOIN customer_addresses ca
+	USING(customer_id)
+WHERE i.payment_date IS NOT NULL
+GROUP BY ca.country
+ORDER BY revenue DESC;
+
+-- City
+DROP VIEW IF EXISTS view_sales_by_city;
+CREATE VIEW view_sales_by_city AS
+SELECT
+	ca.city,
+	SUM(i.payment_total) AS revenue
+FROM invoices i
+JOIN customer_addresses ca
+	USING(customer_id)
+WHERE i.payment_date IS NOT NULL
+GROUP BY ca.city
+ORDER BY revenue DESC;

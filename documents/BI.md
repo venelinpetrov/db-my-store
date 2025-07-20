@@ -9,9 +9,7 @@ Goal: Understand how much we're selling, and what is driving revenue.
 - Total revenue by day/week/month
 - Revenue per product, per category, and per brand
 - Top-selling products by quantity and revenue
-- Average order value (AOV): Total revenue / number of orders
 - Sales by region: Based on shipping address (country, state, city)
-- Sales funnel drop-offs (if tracked externally via events)
 
 ## Customer Behavior & Segmentation
 
