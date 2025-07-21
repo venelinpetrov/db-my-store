@@ -1,7 +1,5 @@
 # 🛒 SQL Store Database Design Exercise
 
-### 🚧 UNDER CONSTRUCTION 🚧
-
 This project is a **comprehensive SQL database modeling exercise** for an e-commerce store, designed to help practice and master relational database concepts through a realistic, industry-grade example.
 
 
@@ -19,7 +17,7 @@ The database includes support for:
 - Product variants (e.g., size, color, style)
 - Variant option modeling with flexible assignment
 - Inventory and pricing (variant-level)
-- Extensible support for orders, payments, and invoices *(planned)*
+- Extensible support for orders, payments, and invoices
 
 
 This exercise simulates a real-world commerce platform architecture. It emphasizes:
@@ -27,6 +25,10 @@ This exercise simulates a real-world commerce platform architecture. It emphasiz
 - Clean **normalization**
 - Flexible, **extensible design**
 - Support for **complex product configurations**
+
+## Seed script
+
+You can find seed script in this [repo](https://github.com/venelinpetrov/my-store-seed-script)
 
 ## Tech Stack
 
