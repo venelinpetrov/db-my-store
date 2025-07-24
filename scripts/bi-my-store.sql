@@ -171,3 +171,10 @@ WHERE i.payment_date IS NOT NULL
 GROUP BY i.customer_id
 ORDER BY total_spent DESC
 LIMIT 20;
+
+-- Inventory & supply chain
+
+-- Variants below threshold
+SELECT variant_id, quantity_in_stock
+FROM inventory_levels
+WHERE quantity_in_stock < 20;
