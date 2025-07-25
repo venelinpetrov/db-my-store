@@ -183,7 +183,7 @@ WHERE quantity_in_stock < 20;
 
 -- Time from order to shipment
 SELECT
-	s.shipment_date,
+    s.shipment_date,
     o.created_at,
     DATE(s.shipment_date) - DATE(o.created_at) as fulfillment_time
 FROM shipments s
@@ -193,7 +193,7 @@ USING (order_id);
 -- Shipping delays: Late deliveries vs. shipment date
 -- Not very clear requirement, so let's assume that a late delivery is more than 7 days
 SELECT
-	shipment_date,
+    shipment_date,
     delivery_date,
     DATE(delivery_date) - DATE(shipment_date) AS delay
 FROM shipments
@@ -202,7 +202,28 @@ ORDER BY delay DESC;
 
 -- Cancellation / Return / Success rate
 SELECT
-  ROUND(COUNT(CASE WHEN status_id = 5 THEN 1 END) * 100.0 / COUNT(*), 2) AS cancellation_rate,
-  ROUND(COUNT(CASE WHEN status_id = 6 THEN 1 END) * 100.0 / COUNT(*), 2) AS return_rate,
-  ROUND(COUNT(CASE WHEN status_id = 4 THEN 1 END) * 100.0 / COUNT(*), 2) AS success_rate
+    ROUND(COUNT(CASE WHEN status_id = 5 THEN 1 END) * 100.0 / COUNT(*), 2) AS cancellation_rate,
+    ROUND(COUNT(CASE WHEN status_id = 6 THEN 1 END) * 100.0 / COUNT(*), 2) AS return_rate,
+    ROUND(COUNT(CASE WHEN status_id = 4 THEN 1 END) * 100.0 / COUNT(*), 2) AS success_rate
 FROM orders;
+
+-- Payments & Financial Health
+
+-- Average payment delay: Invoice due date vs. payment date
+SELECT
+    AVG(DATEDIFF(payment_date, due_date)) AS avg_payment_delay
+FROM invoices
+WHERE payment_date IS NOT NULL AND payment_date > due_date;
+
+-- Payment method breakdown: % paid via card, PayPal, etc.
+SELECT
+	p.method_id,
+    pm.name AS payment_method,
+    ROUND(COUNT(*) * 100.0 / total.total_count, 2) AS percentage
+FROM payments p
+JOIN payment_methods pm USING(method_id)
+JOIN (
+    SELECT COUNT(*) AS total_count FROM payments
+) AS total
+GROUP BY p.method_id, pm.name, total.total_count
+ORDER BY percentage DESC;
