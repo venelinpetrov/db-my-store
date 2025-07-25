@@ -178,3 +178,31 @@ LIMIT 20;
 SELECT variant_id, quantity_in_stock
 FROM inventory_levels
 WHERE quantity_in_stock < 20;
+
+-- Order & Fulfillment Performance
+
+-- Time from order to shipment
+SELECT
+	s.shipment_date,
+    o.created_at,
+    DATE(s.shipment_date) - DATE(o.created_at) as fulfillment_time
+FROM shipments s
+JOIN orders o
+USING (order_id);
+
+-- Shipping delays: Late deliveries vs. shipment date
+-- Not very clear requirement, so let's assume that a late delivery is more than 7 days
+SELECT
+	shipment_date,
+    delivery_date,
+    DATE(delivery_date) - DATE(shipment_date) AS delay
+FROM shipments
+WHERE DATE(delivery_date) - DATE(shipment_date) >= 7
+ORDER BY delay DESC;
+
+-- Cancellation / Return / Success rate
+SELECT
+  ROUND(COUNT(CASE WHEN status_id = 5 THEN 1 END) * 100.0 / COUNT(*), 2) AS cancellation_rate,
+  ROUND(COUNT(CASE WHEN status_id = 6 THEN 1 END) * 100.0 / COUNT(*), 2) AS return_rate,
+  ROUND(COUNT(CASE WHEN status_id = 4 THEN 1 END) * 100.0 / COUNT(*), 2) AS success_rate
+FROM orders;
