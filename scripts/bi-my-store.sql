@@ -232,3 +232,8 @@ ORDER BY percentage DESC;
 SELECT
     ROUND(COUNT(CASE WHEN status_id = 3 THEN 1 END) * 100 / COUNT(*), 2) AS failed_payments_ratio
 FROM payments;
+
+-- Average per invoice
+SELECT
+    ROUND(SUM(invoice_total) / COUNT(*), 2) AS average_per_invoice
+FROM invoices;
