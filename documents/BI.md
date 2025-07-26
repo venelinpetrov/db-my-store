@@ -47,4 +47,4 @@ Goal: Monitor cash flow and billing efficiency. Total paid vs. unpaid invoices
 - Average payment delay: Invoice due date vs. payment date
 - Payment method breakdown: % paid via card, PayPal, etc.
 - Failed payments or retries (if tracked)
-- Discounts issued and average per invoice
+- Average per invoice
