@@ -228,7 +228,7 @@ JOIN (
 GROUP BY p.method_id, pm.name, total.total_count
 ORDER BY percentage DESC;
 
--- Failed payments or retries (if tracked)
+-- Failed payments
 SELECT
     ROUND(COUNT(CASE WHEN status_id = 3 THEN 1 END) * 100 / COUNT(*), 2) AS failed_payments_ratio
 FROM payments;
