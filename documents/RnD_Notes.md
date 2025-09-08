@@ -98,7 +98,7 @@ Each row is a unique combination of options for a product. For example T-shirt, 
 - `option_id`: `FK`
 - `value`: `UQ`
 
-### `variant_options_to_values` table
+### `variant_option_assignments` table
 
 - `variant_id`: `PK`
 - `value_id`: `FK`
