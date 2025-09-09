@@ -57,6 +57,7 @@ In this model a product is just a conceptual entity. It doesn't have `price` and
 
 - `image_id`: `PK`
 - `product_id`: `FK`
+- `variant_id`: `FK`
 - `link`
 - `alt_text` - note: this is not in the requirements, but I decided to add it, for accessibility reasons
 - `is_primary` - note: this is not in the requirements, but the FE will probably need it, if we want deterministic thumbnails
