@@ -33,7 +33,7 @@ CREATE TABLE customer_addresses (
     city VARCHAR(100) NOT NULL,
     street VARCHAR(100) NOT NULL,
     floor VARCHAR(10) DEFAULT NULL,
-    appartment_no VARCHAR(10) DEFAULT NULL,
+    apartment_no VARCHAR(10) DEFAULT NULL,
     address_type_id INT NOT NULL,
     is_default TINYINT DEFAULT 0,
     PRIMARY KEY (address_id),
