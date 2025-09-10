@@ -62,6 +62,36 @@ In this model a product is just a conceptual entity. It doesn't have `price` and
 - `alt_text` - note: this is not in the requirements, but I decided to add it, for accessibility reasons
 - `is_primary` - note: this is not in the requirements, but the FE will probably need it, if we want deterministic thumbnails
 
+Note: Right now an images are coupled with the products/variants, meaning that an image can belong to only one product/variant. Alternativelly, images can be designed as a "pool" and reference them from different products and variants, basically modeling a many-to-many relation. This is more flexible and allows for reusing images. For example a store might want to use a generic image for multiple products or a single image for all variants.
+
+This option will require the following changes in the schema
+
+```sql
+CREATE TABLE product_images (
+    image_id INT NOT NULL AUTO_INCREMENT,
+    link VARCHAR(255) NOT NULL UNIQUE,
+    alt_text VARCHAR(100) NOT NULL,
+    PRIMARY KEY (image_id)
+);
+
+CREATE TABLE product_image_assignments (
+    product_id INT NOT NULL,
+    image_id INT NOT NULL,
+    is_primary TINYINT DEFAULT 0, -- Note that is_primary moves here since this property is *per product*, not per image
+    PRIMARY KEY (product_id, image_id),
+    FOREIGN KEY (product_id) REFERENCES products (product_id) ON DELETE CASCADE,
+    FOREIGN KEY (image_id) REFERENCES product_images (image_id) ON DELETE CASCADE
+);
+
+CREATE TABLE variant_image_assignments (
+    variant_id INT NOT NULL,
+    image_id INT NOT NULL,
+    PRIMARY KEY (variant_id, image_id),
+    FOREIGN KEY (variant_id) REFERENCES product_variants (variant_id) ON DELETE CASCADE,
+    FOREIGN KEY (image_id) REFERENCES product_images (image_id) ON DELETE CASCADE
+);
+```
+
 ### `brands` table
 
 - `brand_id`: `PK`
