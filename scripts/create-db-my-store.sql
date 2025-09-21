@@ -112,7 +112,6 @@ CREATE TABLE product_variants (
     product_id INT NOT NULL,
     sku VARCHAR(20) NOT NULL,
     unit_price DECIMAL(10, 2) NOT NULL,
-    quantity_in_stock INT NOT NULL,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (variant_id),
