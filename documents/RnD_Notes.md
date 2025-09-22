@@ -37,6 +37,7 @@ In this model a product is just a conceptual entity. It doesn't have `price` and
 - `product_id`: `PK`
 - `name`
 - `description`
+- `is_archived`
 - `category_id`
 - `brand`
 - Additional to the mentioned fields in the requirements, let's add `created_at` and `updated_at` fields
@@ -116,6 +117,7 @@ Each row is a unique combination of options for a product. For example T-shirt, 
 - `product_id`: `FK`
 - `sku`: `UQ`
 - `unit_price`
+- `is_archived`
 - ~~quantity_in_stock~~ - this will be moved to inventory
 
 ### `variant_options` table
