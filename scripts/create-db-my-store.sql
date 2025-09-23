@@ -75,7 +75,7 @@ CREATE TABLE products (
     PRIMARY KEY (product_id),
     KEY idx_products_name (name),
     KEY fk_idx_products_brand_id (brand_id),
-    CONSTRAINT fk_products_brands FOREIGN KEY (brand_id) REFERENCES brands (brand_id) ON DELETE SET NULL,
+    CONSTRAINT fk_products_brands FOREIGN KEY (brand_id) REFERENCES brands (brand_id),
     KEY fk_idx_products_category_id (category_id),
     CONSTRAINT fk_products_categories FOREIGN KEY (category_id) REFERENCES product_categories (category_id) ON DELETE SET NULL
 
