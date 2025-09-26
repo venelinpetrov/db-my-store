@@ -173,6 +173,9 @@ Here is my consideration: The most straighrforwad and practical option is to kee
 - `variant_id`: `PK` `FK` - note: very important! I got confused and put product_id at first, but remember, the physical thing we are seeling is a specific "variant". Product is just a conceptual model
 - `quantity`
 - `unit_price` - note: we denormalize this field because we don't want changes in variant price to affect historical data
+- `product_name` - note: we denormalize this field because we don't want changes in product name to affect historical data
+- `sku` - sku is here for convenience. It should not change
+- `brand_name` - note: we denormalize this field because we don't want changes in brand name to affect historical data. Brand names sometimes change for legitimate reasons like rebranding, acquisition etc.
 
 ### `order_statuses` table
 

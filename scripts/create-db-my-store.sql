@@ -203,6 +203,9 @@ CREATE TABLE order_items (
     order_id INT NOT NULL,
     variant_id INT NOT NULL,
     quantity INT NOT NULL,
+    product_name VARCHAR(255) NULL,
+    sku VARCHAR(20) NULL,
+    brand_name VARCHAR(100) NULL;
     unit_price DECIMAL(10, 2) NOT NULL,
     PRIMARY KEY (order_id, variant_id),
     KEY fk_idx_order_items_order_id (order_id),
