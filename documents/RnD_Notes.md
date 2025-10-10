@@ -189,6 +189,28 @@ Here is my consideration: The most straighrforwad and practical option is to kee
 - `order_id`: `FK`
 - `address_id`: `FK`
 
+## Cart
+
+The Cart feature should be available to both, logged-in and annonymous users. The idea is to implement annonymous tracking via sessoin_id. Once the user logs in, we can safely ignore the session_id and use the user_id to associate with their cart. We could use cart_id for tracking but it must be UUID, not sequential, because sequential ids are easy to guess and present security concern. I choose to use session_id column instead. Maybe a bit redundant, but very safe.
+
+
+### `cart` table
+
+- `cart_id`: PK, AI
+- `session_id`: UQ
+- `user_id`: nullable
+- `created_at`
+- `updated_at`
+
+### `cart_item` table
+
+- `item_id`: PK, AI
+- `cart_id`: FK
+- `variant_id`: FK
+- `quantity`
+- `created_at`
+- `updated_at`
+
 
 ## Payments
 
