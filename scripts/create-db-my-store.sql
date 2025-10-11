@@ -197,7 +197,7 @@ CREATE TABLE cart_items (
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     UNIQUE (cart_id, variant_id),
     CONSTRAINT fk_cart_items_cart FOREIGN KEY (cart_id) REFERENCES carts (cart_id) ON DELETE CASCADE,
-    CONSTRAINT fk_cart_items_variants FOREIGN KEY (variant_id) REFERENCES variants (variant_id) ON DELETE CASCADE
+    CONSTRAINT fk_cart_items_variants FOREIGN KEY (variant_id) REFERENCES product_variants (variant_id) ON DELETE CASCADE
 );
 
 -- Orders and Shipment models
