@@ -5,17 +5,40 @@ CREATE DATABASE my_store
 
 USE my_store;
 
--- Customers model
+-- Customer / User model
+
+CREATE TABLE users (
+    user_id INT AUTO_INCREMENT PRIMARY KEY,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    password_hash VARCHAR(255) NOT NULL,
+    is_active BOOLEAN DEFAULT TRUE,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+CREATE TABLE roles (
+    role_id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(50) UNIQUE NOT NULL,
+    description VARCHAR(255)
+);
+
+CREATE TABLE user_roles (
+    user_id INT NOT NULL,
+    role_id INT NOT NULL,
+    PRIMARY KEY (user_id, role_id),
+    CONSTRAINT fk_user_roles_user FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+    CONSTRAINT fk_user_roles_role FOREIGN KEY (role_id) REFERENCES roles(role_id) ON DELETE CASCADE
+);
 
 CREATE TABLE customers (
-    customer_id INT NOT NULL AUTO_INCREMENT,
+    customer_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT UNIQUE,
     name VARCHAR(100) NOT NULL,
-    email VARCHAR(50) NOT NULL,
-    phone VARCHAR(20) NOT NULL,
+    phone VARCHAR(30) NOT NULL,
+    date_of_birth DATE,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    PRIMARY KEY (customer_id),
-    UNIQUE KEY idx_customers_email_UNIQUE (email)
+    CONSTRAINT fk_customers_user FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
 ) ENGINE=InnoDB;
 
 CREATE TABLE address_types (
@@ -69,17 +92,13 @@ CREATE TABLE products (
     description TEXT,
     brand_id INT DEFAULT NULL,
     is_archived TINYINT NOT NULL DEFAULT 0,
-    category_id INT DEFAULT NULL,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (product_id),
     KEY idx_products_name (name),
     KEY fk_idx_products_brand_id (brand_id),
-    CONSTRAINT fk_products_brands FOREIGN KEY (brand_id) REFERENCES brands (brand_id),
-    KEY fk_idx_products_category_id (category_id),
-    CONSTRAINT fk_products_categories FOREIGN KEY (category_id) REFERENCES product_categories (category_id) ON DELETE SET NULL
-
-) ENGINE=InnoDB;
+    CONSTRAINT fk_products_brands FOREIGN KEY (brand_id) REFERENCES brands (brand_id) ON DELETE SET NULL
+) ENGINE = InnoDB;
 
 CREATE TABLE tags (
     tag_id INT NOT NULL AUTO_INCREMENT,
@@ -231,7 +250,7 @@ CREATE TABLE order_items (
     quantity INT NOT NULL,
     product_name VARCHAR(255) NULL,
     sku VARCHAR(20) NULL,
-    brand_name VARCHAR(100) NULL;
+    brand_name VARCHAR(100) NULL,
     unit_price DECIMAL(10, 2) NOT NULL,
     PRIMARY KEY (order_id, variant_id),
     KEY fk_idx_order_items_order_id (order_id),
@@ -246,7 +265,7 @@ CREATE TABLE shipments (
     carrier VARCHAR(50) NOT NULL,
     tracking_number VARCHAR(50) NOT NULL UNIQUE,
     shipment_date DATETIME NOT NULL,
-    delivery_date DATETIME NOT NULL,
+    delivery_date DATETIME DEFAULT NULL,
     order_id INT NOT NULL,
     address_id INT NOT NULL,
     PRIMARY KEY (shipment_id),
@@ -341,20 +360,20 @@ CREATE TRIGGER trg_after_inventory_movement_insert
 AFTER INSERT ON inventory_movements
 FOR EACH ROW
 BEGIN
-  DECLARE updated_quantity INT;
+    DECLARE updated_quantity INT;
 
-  SET updated_quantity =
-    CASE
-      WHEN NEW.movement_type = 'IN' THEN NEW.quantity
-      WHEN NEW.movement_type = 'OUT' THEN -NEW.quantity
-      ELSE 0
-    END;
+    SET updated_quantity =
+        CASE
+            WHEN NEW.movement_type = 'IN' THEN NEW.quantity
+            WHEN NEW.movement_type = 'OUT' THEN -NEW.quantity
+            ELSE 0
+        END;
 
-  INSERT INTO inventory_levels (variant_id, quantity_in_stock)
-  VALUES (NEW.variant_id, updated_quantity)
-  ON DUPLICATE KEY UPDATE
-    quantity_in_stock = quantity_in_stock + updated_quantity,
-    updated_at = CURRENT_TIMESTAMP;
+    INSERT INTO inventory_levels (variant_id, quantity_in_stock)
+    VALUES (NEW.variant_id, updated_quantity)
+    ON DUPLICATE KEY UPDATE
+        quantity_in_stock = quantity_in_stock + updated_quantity,
+        updated_at = CURRENT_TIMESTAMP;
 END$$
 
 DELIMITER ;
