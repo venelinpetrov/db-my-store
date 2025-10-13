@@ -4,14 +4,41 @@ Notes on the breakdown of the problem domain.
 
 ## Customers
 
-The customer model.
+The customer / user model.
+
+I eventually decided to split the customer from user models, that is, separating user (authentication and account-level info) from profile (personal and editable info). This way the schema is more realistic and idiomatic for the e-commerce space. Also introducing roles, which will be needed when implementing the security features of the app layer.
+
+
+### `users` table
+
+- `user_id`: PK, AI
+- `email`: UQ
+- `password_hash`
+- `is_active`
+- `created_at` / `updated_at`
+
+### `roles` table
+
+- `role_id`: PK, AI
+- `name`: UQ
+- `description`
+
+### `user_roles` table
+
+This is a junktion table
+
+- `user_id`: NN, FK
+- `role_id`: NN, FK
+- PK: `user_id` + `role_id`
 
 ### `customers` table
 
-- `customer_id`: should be `PK`, `NN`, `AI`
+- `customer_id`: should be `PK`, `NN`, `AI`,
+- `user_id`: FK
 - `name`: I choosen name to be a single field to account for different cultures
-- `email`: `NN`, `PK`
+- `date_of_birth`
 - `phone`: `NN`
+- `created_at` / `updated_at`
 
 The `address` will be represented in another table in order to support multiple addresses per customer.
 
