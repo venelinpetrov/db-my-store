@@ -198,8 +198,8 @@ CREATE TABLE product_variant_image_assignments (
 -- Cart
 
 CREATE TABLE carts (
-    cart_id INT AUTO_INCREMENT PRIMARY KEY,
-    session_id VARCHAR(255) UNIQUE NULL,
+    cart_id BINARY(16) DEFAULT (UUID_TO_BIN(UUID())) PRIMARY KEY,
+    session_id VBINARY(16) DEFAULT (UUID_TO_BIN(UUID())) NOT NULL,
     customer_id INT,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -209,7 +209,7 @@ CREATE TABLE carts (
 
 CREATE TABLE cart_items (
     item_id INT AUTO_INCREMENT PRIMARY KEY,
-    cart_id INT NOT NULL,
+    cart_id BINARY(16) DEFAULT (UUID_TO_BIN(UUID())) NOT NULL,
     variant_id INT NOT NULL,
     quantity INT NOT NULL DEFAULT 1,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
