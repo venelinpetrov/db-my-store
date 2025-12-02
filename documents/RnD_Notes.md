@@ -251,7 +251,7 @@ Q: How is the `invoice_total` calculated
 
 A: We sum all the items multiplied by their quantitites in the order, add taxes and shipping costs and subtract disocunt. Note that discounts are not modeled here yet.
 
-```
+```bash
 total = sum(item_price * item_quantity) + tax + shipping_cost - discount
 ```
 
@@ -331,9 +331,9 @@ Requirements are a bit vague. Should we support multiple warehouses locations? S
 
 Let's model the simplest scenario where we just keep track of all quantities and update them when a change occurs.
 
-Another important change: `quantity_in_stock` should not be a field of `product_variants` anymore, to should be part of `inventory` instead. This will also allow to suport different quantities in different warehaouses (if needed) which in itself suggests that quantity is not really a property of a variant. This will also improve queries performance because we just need to perform a direct lookup by id which is straighforward.
+Another important change: `quantity_in_stock` should not be a field of `product_variants` anymore, it should be part of `inventory` instead. This will also allow to suport different quantities in different warehaouses (if needed) which by itself suggests that quantity is not really a property of a variant. This will also improve queries performance because we just need to perform a direct lookup by id which is straighforward.
 
-Altohough to mentioned in the initial requirements, it is worth considering an `inventory_movements` table that will keep track of all changes. This will make it possible to track and debug all changes in the inventory. So let's do that as well.
+Altohough it's not mentioned in the initial requirements, it is worth considering an `inventory_movements` table that will keep track of all changes. This will make it possible to track and debug all changes in the inventory. So let's do that as well.
 
 
 Add `trg_after_inventory_movement_insert` trigger to ensure inventory_levels are properly adjusted when there is a new entry in `inventory_movements`
