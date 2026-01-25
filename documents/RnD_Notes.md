@@ -16,6 +16,9 @@ I eventually decided to split the customer from user models, that is, separating
 - `password_hash`
 - `is_active`
 - `created_at` / `updated_at`
+- `token_version`
+
+Note: `token_version` column is used to globally log users out, when they change their password.
 
 ### `roles` table
 
