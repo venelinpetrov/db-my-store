@@ -19,6 +19,7 @@ These are the requirements from the "imaginary product team". The app will be bu
 - Each order must track the products ordered, quantities, and individual prices.
 - Orders must have statuses: e.g., *Pending*, *Shipped*, *Delivered*, *Cancelled*, *Returned*.
 - Each order is tied to a shipping address and a customer.
+- Orders can be processed by different admins and change status.
 
 ### 4. Payments
 - Customers can pay using credit cards, PayPal, or store credit.
