@@ -228,20 +228,19 @@ CREATE TABLE order_statuses (
 ) ENGINE=InnoDB;
 
 CREATE TABLE orders (
-    order_id INT NOT NULL AUTO_INCREMENT,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    order_id INT AUTO_INCREMENT PRIMARY KEY,
+    created_at datetime DEFAULT CURRENT_TIMESTAMP NULL,
+    updated_at datetime DEFAULT CURRENT_TIMESTAMP NULL ON UPDATE CURRENT_TIMESTAMP,
     status_id INT NOT NULL,
     customer_id INT NOT NULL,
     address_id INT NOT NULL,
-    PRIMARY KEY (order_id),
-    KEY fk_idx_orders_status_id (status_id),
-    KEY fk_idx_orders_customer_id (customer_id),
-    KEY fk_idx_orders_address_id (address_id),
-    KEY idx_orders_customer_status (customer_id, status_id),
-    FOREIGN KEY (status_id) REFERENCES order_statuses (status_id),
-    FOREIGN KEY (customer_id) REFERENCES customers (customer_id),
-    FOREIGN KEY (address_id) REFERENCES customer_addresses (address_id)
+    subtotal decimal(10, 2) DEFAULT 0.00 NOT NULL,
+    tax decimal(10, 2) DEFAULT 0.00 NOT NULL,
+    shipping_cost decimal(10, 2) DEFAULT 0.00 NOT NULL,
+    total decimal(10, 2) DEFAULT 0.00 NOT NULL,
+    CONSTRAINT orders_order_statuses FOREIGN KEY (status_id) REFERENCES order_statuses (status_id),
+    CONSTRAINT orders_customers FOREIGN KEY (customer_id) REFERENCES customers (customer_id),
+    CONSTRAINT orders_customer_addresses FOREIGN KEY (address_id) REFERENCES customer_addresses (address_id)
 ) ENGINE=InnoDB;
 
 CREATE TABLE order_items (
