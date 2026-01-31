@@ -193,6 +193,25 @@ Here is my consideration: The most straighrforwad and practical option is to kee
 - `status_id`: `FK`
 - `customer_id`: `FK`
 - `address_id`: `FK` - this is the shipping address
+- `tax` - for v0 this is just the total tax amount, not the rate
+- `subtotal` - the sum of all items * quantity
+- `shipping_cost` - this is the cost of shipping, not the method. The method will be stored in the `shipments` table maybe?
+- `total` - the sum of all items * quantity + shipping_cost + tax
+
+### `tax_rates` table
+
+This is the v0 schema
+
+- `tax_rate_id`
+- `country_code`
+- `state_code`
+- `rate`
+- `effective_from`
+- `effective_to`
+- `created_at`
+- `updated_at`
+
+For v1 consider `tax_jurisdictions`, `tax_rates`, `tax_rules` and `tax_exemptions` tables as well.
 
 ### `order_items` table
 
