@@ -337,6 +337,13 @@ Let's go with option 1 for now, no status on ivoices.
 - `payment_date`
 - `payment_method_id`
 - `status_id`: `FK`
+- `stripe_payment_intent_id`
+- `stripe_charge_id`
+- `stripe_customer_id`
+- `metadata`
+- `attempt_number`
+- `failure_reason`
+- `failure_code`
 
 
 ## Inventory management
