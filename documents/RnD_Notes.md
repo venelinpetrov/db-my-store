@@ -271,7 +271,7 @@ A: The application layer will be responsible for this, as this is more transpare
 
 Q: How is the `invoice_total` calculated
 
-A: We sum all the items multiplied by their quantitites in the order, add taxes and shipping costs and subtract disocunt. Note that discounts are not modeled here yet.
+A: We sum all the items multiplied by their quantitites in the order, add taxes and shipping costs and subtract discount. Note that discounts are not modeled here yet.
 
 ```bash
 total = sum(item_price * item_quantity) + tax + shipping_cost - discount
@@ -303,6 +303,50 @@ Cons:
 - Risk of stale/inconsistent data unless kept in sync (via triggers or app logic).
 
 Let's go with option 1 for now, no status on ivoices.
+
+---
+
+I reconsidered invoice status. Here are some problems that I want to solve:
+
+1. Ambiguous state: An invoice can be paid, but also voided, refunded, etc.
+
+How do you know if it was paid, overdue, canceled etc.? You have to rely on complex logic in the application layer.
+
+```js
+// Current approach requires complex logic:
+if (invoice.getPaymentDate() != null) {
+    // Paid? But what if refunded?
+} else if (invoice.getDueDate().isBefore(LocalDateTime.now())) {
+    // Overdue? But what if cancelled?
+} else {
+    // Pending? But what if payment is processing?
+}
+```
+
+2. Can't track refunds properly
+
+3. Hard to query. For example, how do you find all paid invoices? You have to check all possible statuses that indicate paid.
+
+```sql
+-- Hard to query: "Show me all unpaid invoices"
+SELECT * FROM invoices
+WHERE payment_date IS NULL
+  AND due_date > NOW()
+  AND /* how to exclude cancelled? */
+
+-- It's easier with status
+SELECT * FROM invoices WHERE status = 'UNPAID'
+```
+
+Example statuses:
+
+- `DRAFT` - invoice is created, but not yet sent to the customer
+- `ISSUED` - invoice is sent to the customer
+- `PAID` - invoice is paid
+- `REFUNDED` - invoice is refunded
+- `CANCELLED` - the customer has cancelled the order
+- `VOID` - the invoice was not paid and will not be paid
+- `OVERDUE` - invoice is overdue
 
 ### `invoices` table
 
