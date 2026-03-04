@@ -238,6 +238,28 @@ For v1 consider `tax_jurisdictions`, `tax_rates`, `tax_rules` and `tax_exemption
 - `order_id`: `FK`
 - `address_id`: `FK`
 
+List of improvements
+
+1. Shipment status lifecycle
+- ShipmentStatus / ShipmentStatusType entity: pending, ready_to_ship, in_transit, out_for_delivery, delivered, cancelled, returned, failed, refunded etc.
+
+2. Shipment items
+Support partial shipments (order split across multiple shipments). Add ShipmentItem entity (many-to-many between Shipment and OrderItem)
+
+3. Tracking Events
+Add shipment tracking events (timestamped status changes) that track carrier updates
+
+4. Carrier info
+carrier_id, name, code, tracking_url_template, api_endpoint
+Examples: FedEx, UPS, DHL, USPS, local couriers
+
+5. Shipping method/service level
+ShippingMethod entity
+STANDARD, EXPRESS, OVERNIGHT, SAME_DAY
+Links to carrier and estimated delivery time
+Used during checkout to calculate shipping costs
+
+
 ## Cart
 
 The Cart feature should be available to both, logged-in and annonymous users. The idea is to implement annonymous tracking via sessoin_id. Once the user logs in, we can safely ignore the session_id and use the customer_id to associate with their cart. We could use cart_id for tracking but it must be UUID, not sequential, because sequential ids are easy to guess and present security concern. I choose to use session_id column instead. Maybe a bit redundant, but very safe.
