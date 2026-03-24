@@ -250,8 +250,30 @@ Support partial shipments (order split across multiple shipments). Add ShipmentI
 Add shipment tracking events (timestamped status changes) that track carrier updates
 
 4. Carrier info
-carrier_id, name, code, tracking_url_template, api_endpoint
-Examples: FedEx, UPS, DHL, USPS, local couriers
+carrier_id, name, code, tracking_url_template*, api_endpoint
+
+\* `tracking_url_template`'s purpose is to store a URL pattern for tracking shipments with a specific carrier. Each carrier (FedEx, UPS, DHL, USPS, etc.) has its own tracking page, and the template would contain a placeholder where the tracking_number gets substituted at runtime to generate a clickable tracking link.
+
+For example:
+
+UPS: https://www.ups.com/track?tracknum={tracking_number}
+FedEx: https://www.fedex.com/fedextrack/?tracknumbers={tracking_number}
+DHL: https://www.dhl.com/en/express/tracking.html?AWB={tracking_number}
+This way, the app layer can dynamically build the full tracking URL for any shipment by combining the carrier's tracking_url_template with the shipment's tracking_number, without hardcoding carrier-specific URLs in application code.
+
+\*\* api_endpoint is a machine-facing URL — the base URL the backend uses to programmatically talk to the carrier's API.
+
+This would be used for things like:
+
+Booking/creating shipments (generating a label)
+Fetching real-time tracking status updates automatically (instead of a customer visiting a webpage)
+Getting shipping rate quotes at checkout
+Cancelling shipments
+For example:
+
+UPS API: https://onlinetools.ups.com/api
+FedEx API: https://apis.fedex.com
+DHL API: https://api-mock.dhl.com/mydhlapi
 
 5. Shipping method/service level
 ShippingMethod entity
