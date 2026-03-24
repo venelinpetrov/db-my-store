@@ -286,6 +286,26 @@ CREATE TABLE carriers (
     UNIQUE KEY idx_carriers_code_UNIQUE (code)
 ) ENGINE = InnoDB;
 
+CREATE TABLE shipment_statuses (
+    status_id INT NOT NULL AUTO_INCREMENT,
+    name VARCHAR(50) NOT NULL,
+    PRIMARY KEY (status_id),
+    UNIQUE KEY idx_shipment_statuses_name (name)
+) ENGINE = InnoDB;
+
+CREATE TABLE shipment_tracking_events (
+    event_id INT NOT NULL AUTO_INCREMENT,
+    shipment_id INT NOT NULL,
+    status_id INT NOT NULL,
+    timestamp DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (event_id),
+    KEY fk_idx_shipment_tracking_events_shipment_id (shipment_id),
+    KEY fk_idx_shipment_tracking_events_status_id (status_id),
+    FOREIGN KEY (shipment_id) REFERENCES shipments (shipment_id),
+    FOREIGN KEY (status_id) REFERENCES shipment_statuses (status_id)
+) ENGINE = InnoDB;
+
+
 -- Invoices and Payments model
 
 CREATE TABLE invoices (
