@@ -247,7 +247,11 @@ List of improvements
 Support partial shipments (order split across multiple shipments). Add ShipmentItem entity (many-to-many between Shipment and OrderItem)
 
 3. Tracking Events
-Add shipment tracking events (timestamped status changes) that track carrier updates
+Add shipment tracking events (timestamped status changes) that track carrier updates. This can be a separate table called `shipment_tracking_events` with the following columns:
+- `event_id`: `PK`
+- `shipment_id`: `FK`
+- `status_id`: `FK`
+- `timestamp`
 
 4. Carrier info
 carrier_id, name, code, tracking_url_template*, api_endpoint

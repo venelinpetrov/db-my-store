@@ -261,18 +261,30 @@ CREATE TABLE order_items (
 
 CREATE TABLE shipments (
     shipment_id INT NOT NULL AUTO_INCREMENT,
-    carrier VARCHAR(50) NOT NULL,
     tracking_number VARCHAR(50) NOT NULL UNIQUE,
     shipment_date DATETIME NOT NULL,
     delivery_date DATETIME DEFAULT NULL,
     order_id INT NOT NULL,
+    carrier_id INT NOT NULL,
     address_id INT NOT NULL,
     PRIMARY KEY (shipment_id),
     KEY fk_idx_shipments_order_id (order_id),
     KEY fk_idx_shipments_address_id (address_id),
     FOREIGN KEY (order_id) REFERENCES orders (order_id),
-    FOREIGN KEY (address_id) REFERENCES customer_addresses (address_id)
+    FOREIGN KEY (address_id) REFERENCES customer_addresses (address_id),
+    FOREIGN KEY (carrier_id) REFERENCES carriers (carrier_id)
 ) ENGINE=InnoDB;
+
+CREATE TABLE carriers (
+    carrier_id INT NOT NULL AUTO_INCREMENT,
+    name VARCHAR(100) NOT NULL,
+    code VARCHAR(100) NOT NULL,
+    tracking_url_template VARCHAR(500) DEFAULT NULL,
+    api_endpoint VARCHAR(500) DEFAULT NULL,
+    PRIMARY KEY (carrier_id),
+    UNIQUE KEY idx_carriers_name_UNIQUE (name),
+    UNIQUE KEY idx_carriers_code_UNIQUE (code)
+) ENGINE = InnoDB;
 
 -- Invoices and Payments model
 
