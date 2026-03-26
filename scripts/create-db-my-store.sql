@@ -199,7 +199,7 @@ CREATE TABLE product_variant_image_assignments (
 
 CREATE TABLE carts (
     cart_id BINARY(16) DEFAULT (UUID_TO_BIN(UUID())) PRIMARY KEY,
-    session_id VBINARY(16) DEFAULT (UUID_TO_BIN(UUID())) NOT NULL,
+    session_id VARBINARY(16) DEFAULT (UUID_TO_BIN(UUID())) NOT NULL,
     customer_id INT,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -259,6 +259,17 @@ CREATE TABLE order_items (
 ) ENGINE=InnoDB;
 
 
+CREATE TABLE carriers (
+    carrier_id INT NOT NULL AUTO_INCREMENT,
+    name VARCHAR(100) NOT NULL,
+    code VARCHAR(100) NOT NULL,
+    tracking_url_template VARCHAR(500) DEFAULT NULL,
+    api_endpoint VARCHAR(500) DEFAULT NULL,
+    PRIMARY KEY (carrier_id),
+    UNIQUE KEY idx_carriers_name_UNIQUE (name),
+    UNIQUE KEY idx_carriers_code_UNIQUE (code)
+) ENGINE = InnoDB;
+
 CREATE TABLE shipments (
     shipment_id INT NOT NULL AUTO_INCREMENT,
     tracking_number VARCHAR(50) NOT NULL UNIQUE,
@@ -274,17 +285,6 @@ CREATE TABLE shipments (
     FOREIGN KEY (address_id) REFERENCES customer_addresses (address_id),
     FOREIGN KEY (carrier_id) REFERENCES carriers (carrier_id)
 ) ENGINE=InnoDB;
-
-CREATE TABLE carriers (
-    carrier_id INT NOT NULL AUTO_INCREMENT,
-    name VARCHAR(100) NOT NULL,
-    code VARCHAR(100) NOT NULL,
-    tracking_url_template VARCHAR(500) DEFAULT NULL,
-    api_endpoint VARCHAR(500) DEFAULT NULL,
-    PRIMARY KEY (carrier_id),
-    UNIQUE KEY idx_carriers_name_UNIQUE (name),
-    UNIQUE KEY idx_carriers_code_UNIQUE (code)
-) ENGINE = InnoDB;
 
 CREATE TABLE shipment_statuses (
     status_id INT NOT NULL AUTO_INCREMENT,
@@ -404,7 +404,7 @@ BEGIN
         CASE
             WHEN NEW.movement_type = 'IN' THEN NEW.quantity
             WHEN NEW.movement_type = 'OUT' THEN -NEW.quantity
-            ELSE 0
+            ELSE NEW.quantity
         END;
 
     INSERT INTO inventory_levels (variant_id, quantity_in_stock)
