@@ -1,6 +1,6 @@
 # 🛒 SQL Store Database Design Exercise
 
-This project is a **comprehensive SQL database modeling exercise** for an e-commerce store, designed to help practice and master relational database concepts through a realistic, industry-grade example.
+This project is a **comprehensive SQL database modeling exercise** for an e-commerce store, designed to help practice relational database concepts through a realistic example.
 
 <img alt="my-store-db drawio" src="https://github.com/venelinpetrov/db-my-store/blob/master/diagrams/my_store_dbeaver.png" />
 
